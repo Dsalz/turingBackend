@@ -19,8 +19,7 @@ const onlineConnection = {
   database: process.env.DATABASE_NAME
 };
 
-// const dbConnection = process.env.NODE_ENV === 'production' ? onlineConnection : localConnection;
-const dbConnection = process.env.NODE_ENV === 'production' ? localConnection : onlineConnection;
+const dbConnection = process.env.NODE_ENV === 'development' ? localConnection : onlineConnection;
 
 const connection = mysql.createConnection(dbConnection);
 

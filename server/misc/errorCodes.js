@@ -16,6 +16,7 @@ export const USR_INVALID_PHONE = 'USR_06';
 export const USR_VALUE_TOO_LONG = 'USR_07';
 export const USR_INVALID_CARD = 'USR_08';
 export const USR_INVALID_SHIPPING_ID = 'USR_09';
+export const USR_INVALID_FIELD = 'USR_10';
 
 // Catergory Errors
 export const CAT_NOT_FOUND = 'CAT_01';
