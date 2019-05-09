@@ -6,7 +6,7 @@
   "scripts": {
     "start": " node ./dist",
     "dev": "nodemon --exec babel-node ./server",
-    "test": "nyc mocha --require @babel/polyfill --require @babel/register ./server/test --timeout 10000 --exit",
+    "test": "nyc mocha --require @babel/polyfill --require @babel/register ./server/test --timeout 20000 --exit",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "build": "rm -rf dist && mkdir dist && babel -d ./dist ./server -s",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run build"

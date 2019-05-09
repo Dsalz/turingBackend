@@ -108,4 +108,44 @@ export default {
     }
     return next();
   },
+  validateOrder: () => (req, res, next) => {
+    const {
+      cart_id,
+      shipping_id,
+      tax_id,
+      comments,
+    } = req.body;
+    if (!cart_id) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'The cart id is required', 'cart_id'));
+    }
+    if (typeof cart_id !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid Cart Id', 'cart_id'));
+    }
+    if (!shipping_id) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'The shipping id is required', 'shipping_id'));
+    }
+    if (typeof shipping_id !== 'number') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid Shipping Id', 'shipping_id'));
+    }
+    if (!tax_id) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'The tax id is required', 'tax_id'));
+    }
+    if (typeof tax_id !== 'number') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid Tax Id', 'tax_id'));
+    }
+    if (comments && typeof comments !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid Comment', 'comment'));
+    }
+    return next();
+  },
+  validatePathId: () => async (req, res, next) => {
+    const { id } = req.params;
+    const invalidNumber = /\D/g.test(id);
+
+    if (invalidNumber) {
+      return res.status(404).send({ error: { message: 'Endpoint not found' } });
+    }
+
+    return next();
+  }
 };

@@ -18,6 +18,9 @@ export const USR_INVALID_CARD = 'USR_08';
 export const USR_INVALID_SHIPPING_ID = 'USR_09';
 export const USR_INVALID_FIELD = 'USR_10';
 
+// Order Errors
+export const ORD_NOT_FOUND = 'ORD_01';
+
 // Catergory Errors
 export const CAT_NOT_FOUND = 'CAT_01';
 

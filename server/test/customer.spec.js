@@ -45,7 +45,7 @@ before((done) => {
 });
 
 describe('Signing customer up', () => {
-  it('should succeed if fields are valid and not return password', () => {
+  it('should succeed if fields are valid and not return password', (done) => {
     const newUser = {
       name: 'Damola Makinaki',
       email: 'jjjjemail@yahoo.com',
@@ -61,10 +61,11 @@ describe('Signing customer up', () => {
         should.not.exist(res.body.customer.schema.password);
         expect(res.body.customer.schema.email).to.equal(newUser.email);
         expect(res.body.customer.schema.name).to.equal(newUser.name);
+        done();
       });
   });
 
-  it('should fail if name is not provided', () => {
+  it('should fail if name is not provided', (done) => {
     const newUser = {
       email: 'makina@yahoo.com',
       password: '12345',
@@ -74,12 +75,13 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The name field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The name field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
 
-  it('should fail if name is an empty string', () => {
+  it('should fail if name is an empty string', (done) => {
     const newUser = {
       name: ' ',
       email: 'makina@yahoo.com',
@@ -90,11 +92,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The name field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The name field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if email is an empty string', () => {
+  it('should fail if email is an empty string', (done) => {
     const newUser = {
       name: 'jfjfj',
       email: ' ',
@@ -105,11 +108,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The email field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The email field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if email is not provided', () => {
+  it('should fail if email is not provided', (done) => {
     const newUser = {
       name: 'jfjfj',
       password: '12345',
@@ -119,11 +123,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The email field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The email field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if email is invalid', () => {
+  it('should fail if email is invalid', (done) => {
     const newUser = {
       name: 'jfjfj',
       email: 2,
@@ -134,11 +139,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Email');
-        expect(res.body.code).to.equal(USR_INVALID_EMAIL);
+        expect(res.body.error.message).to.equal('Invalid Email');
+        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL);
+        done();
       });
   });
-  it('should fail if password is not given', () => {
+  it('should fail if password is not given', (done) => {
     const newUser = {
       name: 'jfjfj',
       email: 'makina@yahoo.com',
@@ -148,11 +154,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The password field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The password field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if password is invalid', () => {
+  it('should fail if password is invalid', (done) => {
     const newUser = {
       name: 'jfjfj',
       email: 'makina@yahoo.com',
@@ -163,11 +170,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Password');
-        expect(res.body.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        expect(res.body.error.message).to.equal('Invalid Password');
+        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        done();
       });
   });
-  it('should fail if day_phone is invalid', () => {
+  it('should fail if day_phone is invalid', (done) => {
     const newUser = {
       name: 'jfjfj',
       day_phone: '09736',
@@ -179,11 +187,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid phone number');
-        expect(res.body.code).to.equal(USR_INVALID_PHONE);
+        expect(res.body.error.message).to.equal('Invalid phone number');
+        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        done();
       });
   });
-  it('should fail if eve_phone is invalid', () => {
+  it('should fail if eve_phone is invalid', (done) => {
     const newUser = {
       name: 'jfjfj',
       eve_phone: '09736',
@@ -195,11 +204,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid phone number');
-        expect(res.body.code).to.equal(USR_INVALID_PHONE);
+        expect(res.body.error.message).to.equal('Invalid phone number');
+        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        done();
       });
   });
-  it('should fail if mob_phone is invalid', () => {
+  it('should fail if mob_phone is invalid', (done) => {
     const newUser = {
       name: 'jfjfj',
       mob_phone: '09736',
@@ -211,11 +221,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid phone number');
-        expect(res.body.code).to.equal(USR_INVALID_PHONE);
+        expect(res.body.error.message).to.equal('Invalid phone number');
+        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        done();
       });
   });
-  it('should fail if credit card is invalid', () => {
+  it('should fail if credit card is invalid', (done) => {
     const newUser = {
       name: 'jfjfj',
       credit_card: '1238df',
@@ -227,11 +238,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid credit card details');
-        expect(res.body.code).to.equal(USR_INVALID_CARD);
+        expect(res.body.error.message).to.equal('Invalid credit card details');
+        expect(res.body.error.code).to.equal(USR_INVALID_CARD);
+        done();
       });
   });
-  it('should fail if user with email already exists', () => {
+  it('should fail if user with email already exists', (done) => {
     const newUser = {
       name: 'Damola Makinaki',
       email: 'duplicationtestemail@yahoo.com',
@@ -242,14 +254,15 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Email already exists');
-        expect(res.body.code).to.equal(USR_EMAIL_ALREADY_EXISTS);
+        expect(res.body.error.message).to.equal('Email already exists');
+        expect(res.body.error.code).to.equal(USR_EMAIL_ALREADY_EXISTS);
+        done();
       });
   });
 });
 
 describe('Logging customers in', () => {
-  it('should succeed if fields are valid and not return password', () => {
+  it('should succeed if fields are valid and not return password', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       password: '12345'
@@ -263,10 +276,11 @@ describe('Logging customers in', () => {
         expect(res.body.message).to.equal('User successfully logged in');
         should.not.exist(res.body.customer.schema.password);
         expect(res.body.customer.schema.email).to.equal(user.email);
+        done();
       });
   });
 
-  it('should fail if user with email does not exist', () => {
+  it('should fail if user with email does not exist', (done) => {
     const newUser = {
       email: 'du@yahoo.com',
       password: '12345'
@@ -276,12 +290,13 @@ describe('Logging customers in', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('User with email does not exist');
-        expect(res.body.code).to.equal(USR_EMAIL_NOT_FOUND);
+        expect(res.body.error.message).to.equal('User with email does not exist');
+        expect(res.body.error.code).to.equal(USR_EMAIL_NOT_FOUND);
+        done();
       });
   });
 
-  it('should fail if password is incorrect', () => {
+  it('should fail if password is incorrect', (done) => {
     const newUser = {
       email: 'duplicationtestemail@yahoo.com',
       password: '12'
@@ -291,12 +306,13 @@ describe('Logging customers in', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('Invalid password');
-        expect(res.body.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        expect(res.body.error.message).to.equal('Invalid password');
+        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        done();
       });
   });
 
-  it('should fail if email is an empty string', () => {
+  it('should fail if email is an empty string', (done) => {
     const newUser = {
       email: ' ',
       password: '12345',
@@ -306,11 +322,12 @@ describe('Logging customers in', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The email field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The email field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if email is not provided', () => {
+  it('should fail if email is not provided', (done) => {
     const newUser = {
       password: '12345',
     };
@@ -319,11 +336,12 @@ describe('Logging customers in', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The email field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The email field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if email is invalid', () => {
+  it('should fail if email is invalid', (done) => {
     const newUser = {
       email: 2,
       password: '12345',
@@ -333,11 +351,12 @@ describe('Logging customers in', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Email');
-        expect(res.body.code).to.equal(USR_INVALID_EMAIL);
+        expect(res.body.error.message).to.equal('Invalid Email');
+        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL);
+        done();
       });
   });
-  it('should fail if password is not given', () => {
+  it('should fail if password is not given', (done) => {
     const newUser = {
       email: 'makina@yahoo.com',
     };
@@ -346,11 +365,12 @@ describe('Logging customers in', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The password field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The password field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if password is invalid', () => {
+  it('should fail if password is invalid', (done) => {
     const newUser = {
       email: 'makina@yahoo.com',
       password: true
@@ -360,8 +380,9 @@ describe('Logging customers in', () => {
       .send(newUser)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Password');
-        expect(res.body.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        expect(res.body.error.message).to.equal('Invalid Password');
+        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        done();
       });
   });
 });
@@ -382,7 +403,7 @@ describe('Updating customers information', () => {
         done();
       });
   });
-  it('should succeed if fields are valid and not return password', () => {
+  it('should succeed if fields are valid and not return password', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       name: 'abcyyyy',
@@ -404,10 +425,11 @@ describe('Updating customers information', () => {
         expect(res.body.eve_phone).to.equal(user.eve_phone);
         expect(res.body.mob_phone).to.equal(user.mob_phone);
         should.not.exist(res.body.password);
+        done();
       });
   });
 
-  it('should succeed if only required fields are provided', () => {
+  it('should succeed if only required fields are provided', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       name: 'Damola',
@@ -422,10 +444,11 @@ describe('Updating customers information', () => {
         expect(res.body.email).to.equal(user.email);
         expect(res.body.name).to.equal(user.name);
         should.not.exist(res.body.password);
+        done();
       });
   });
 
-  it('should fail if api key is invalid', () => {
+  it('should fail if api key is invalid', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       name: 'abcd',
@@ -440,12 +463,13 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('The apikey is invalid');
-        expect(res.body.code).to.equal(AUT_UNAUTHORIZED);
+        expect(res.body.error.message).to.equal('The apikey is invalid');
+        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        done();
       });
   });
 
-  it('should fail if api key is not provided', () => {
+  it('should fail if api key is not provided', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       name: 'abcd',
@@ -459,11 +483,12 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('There is no api key');
-        expect(res.body.code).to.equal(AUT_EMPTY_CODE);
+        expect(res.body.error.message).to.equal('There is no api key');
+        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        done();
       });
   });
-  it('should fail if new email already taken', () => {
+  it('should fail if new email already taken', (done) => {
     const user = {
       email: 'testemail@yahoo.com',
       name: 'abcd',
@@ -478,11 +503,12 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Email already exists');
-        expect(res.body.code).to.equal(USR_EMAIL_ALREADY_EXISTS);
+        expect(res.body.error.message).to.equal('Email already exists');
+        expect(res.body.error.code).to.equal(USR_EMAIL_ALREADY_EXISTS);
+        done();
       });
   });
-  it('should fail if email is not provided', () => {
+  it('should fail if email is not provided', (done) => {
     const user = {
       name: 'abcd',
       password: '123456',
@@ -496,11 +522,12 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The email field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The email field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if email is invalid', () => {
+  it('should fail if email is invalid', (done) => {
     const user = {
       email: 'duplicationtestemailyahoo.com',
       name: 'abcd',
@@ -515,11 +542,12 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Email');
-        expect(res.body.code).to.equal(USR_INVALID_EMAIL);
+        expect(res.body.error.message).to.equal('Invalid Email');
+        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL);
+        done();
       });
   });
-  it('should fail if name is not provided', () => {
+  it('should fail if name is not provided', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       password: '123456',
@@ -533,11 +561,12 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The name field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The name field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if password is invalid', () => {
+  it('should fail if password is invalid', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       name: 'abcd',
@@ -552,11 +581,12 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Password');
-        expect(res.body.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        expect(res.body.error.message).to.equal('Invalid Password');
+        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        done();
       });
   });
-  it('should fail if day_phone is invalid', () => {
+  it('should fail if day_phone is invalid', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       name: 'abcd',
@@ -570,11 +600,12 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid phone number');
-        expect(res.body.code).to.equal(USR_INVALID_PHONE);
+        expect(res.body.error.message).to.equal('Invalid phone number');
+        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        done();
       });
   });
-  it('should fail if eve_phone is invalid', () => {
+  it('should fail if eve_phone is invalid', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       name: 'abcd',
@@ -588,11 +619,12 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid phone number');
-        expect(res.body.code).to.equal(USR_INVALID_PHONE);
+        expect(res.body.error.message).to.equal('Invalid phone number');
+        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        done();
       });
   });
-  it('should fail if mob_phone is invalid', () => {
+  it('should fail if mob_phone is invalid', (done) => {
     const user = {
       email: 'duplicationtestemail@yahoo.com',
       name: 'abcd',
@@ -606,14 +638,15 @@ describe('Updating customers information', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid phone number');
-        expect(res.body.code).to.equal(USR_INVALID_PHONE);
+        expect(res.body.error.message).to.equal('Invalid phone number');
+        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        done();
       });
   });
 });
 
 describe('Get customers information', () => {
-  it('should succeed if fields are valid and not return password', () => {
+  it('should succeed if fields are valid and not return password', (done) => {
     chai.request(app)
       .get(`${currApiPrefix}/customer`)
       .set('USER-KEY', `${userToken}`)
@@ -623,33 +656,36 @@ describe('Get customers information', () => {
         expect(res.body.name).to.equal('Damola');
         expect(res.body.email).to.equal('duplicationtestemail@yahoo.com');
         should.not.exist(res.body.password);
+        done();
       });
   });
 
-  it('should fail if api key is invalid', () => {
+  it('should fail if api key is invalid', (done) => {
     chai.request(app)
       .get(`${currApiPrefix}/customer`)
       .set('USER-KEY', `${wrongToken}`)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('The apikey is invalid');
-        expect(res.body.code).to.equal(AUT_UNAUTHORIZED);
+        expect(res.body.error.message).to.equal('The apikey is invalid');
+        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        done();
       });
   });
 
-  it('should fail if no api key is provided', () => {
+  it('should fail if no api key is provided', (done) => {
     chai.request(app)
       .get(`${currApiPrefix}/customer`)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('There is no api key');
-        expect(res.body.code).to.equal(AUT_EMPTY_CODE);
+        expect(res.body.error.message).to.equal('There is no api key');
+        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        done();
       });
   });
 });
 
 describe('Updating customers address', () => {
-  it('should succeed if fields are valid and not return password', () => {
+  it('should succeed if fields are valid and not return password', (done) => {
     const user = {
       address_1: 'sjsdhdhdfhjfjf',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -673,10 +709,11 @@ describe('Updating customers address', () => {
         expect(res.body.postal_code).to.equal(user.postal_code);
         expect(res.body.shipping_region_id).to.equal(user.shipping_region_id);
         should.not.exist(res.body.password);
+        done();
       });
   });
 
-  it('should fail if api key is invalid', () => {
+  it('should fail if api key is invalid', (done) => {
     const user = {
       address_1: 'sjsdhdhdfhjfjf',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -692,12 +729,13 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('The apikey is invalid');
-        expect(res.body.code).to.equal(AUT_UNAUTHORIZED);
+        expect(res.body.error.message).to.equal('The apikey is invalid');
+        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        done();
       });
   });
 
-  it('should fail if api key is not provided', () => {
+  it('should fail if api key is not provided', (done) => {
     const user = {
       address_1: 'sjsdhdhdfhjfjf',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -712,11 +750,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('There is no api key');
-        expect(res.body.code).to.equal(AUT_EMPTY_CODE);
+        expect(res.body.error.message).to.equal('There is no api key');
+        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        done();
       });
   });
-  it('should fail if address_1 is not provided', () => {
+  it('should fail if address_1 is not provided', (done) => {
     const user = {
       address_2: 'kdjhdfhfhfjfjfhfhfh',
       city: 'Lagos',
@@ -731,11 +770,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The address field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The address field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if address_1 is invalid', () => {
+  it('should fail if address_1 is invalid', (done) => {
     const user = {
       address_1: true,
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -751,11 +791,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Address');
-        expect(res.body.code).to.equal(USR_INVALID_FIELD);
+        expect(res.body.error.message).to.equal('Invalid Address');
+        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        done();
       });
   });
-  it('should fail if address_2 is invalid', () => {
+  it('should fail if address_2 is invalid', (done) => {
     const user = {
       address_2: true,
       address_1: 'kdjhdfhfhfjfjfhfhfh',
@@ -771,11 +812,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Address');
-        expect(res.body.code).to.equal(USR_INVALID_FIELD);
+        expect(res.body.error.message).to.equal('Invalid Address');
+        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        done();
       });
   });
-  it('should fail if city is not provided', () => {
+  it('should fail if city is not provided', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -790,11 +832,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The city field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The city field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if city is invalid', () => {
+  it('should fail if city is invalid', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -810,11 +853,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid City');
-        expect(res.body.code).to.equal(USR_INVALID_FIELD);
+        expect(res.body.error.message).to.equal('Invalid City');
+        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        done();
       });
   });
-  it('should fail if region is not provided', () => {
+  it('should fail if region is not provided', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -829,11 +873,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The region field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The region field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if region is invalid', () => {
+  it('should fail if region is invalid', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -849,11 +894,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Region');
-        expect(res.body.code).to.equal(USR_INVALID_FIELD);
+        expect(res.body.error.message).to.equal('Invalid Region');
+        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        done();
       });
   });
-  it('should fail if postal code is not provided', () => {
+  it('should fail if postal code is not provided', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -868,11 +914,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The postal code field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The postal code field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if postal code is invalid', () => {
+  it('should fail if postal code is invalid', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -888,11 +935,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Postal Code');
-        expect(res.body.code).to.equal(USR_INVALID_FIELD);
+        expect(res.body.error.message).to.equal('Invalid Postal Code');
+        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        done();
       });
   });
-  it('should fail if country is not provided', () => {
+  it('should fail if country is not provided', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -907,11 +955,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The country field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The country field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if country is invalid', () => {
+  it('should fail if country is invalid', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -927,11 +976,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Country');
-        expect(res.body.code).to.equal(USR_INVALID_FIELD);
+        expect(res.body.error.message).to.equal('Invalid Country');
+        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        done();
       });
   });
-  it('should fail if shipping region is not provided', () => {
+  it('should fail if shipping region is not provided', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -946,11 +996,12 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The shipping region field is required');
-        expect(res.body.code).to.equal(USR_INVALID_SHIPPING_ID);
+        expect(res.body.error.message).to.equal('The shipping region field is required');
+        expect(res.body.error.code).to.equal(USR_INVALID_SHIPPING_ID);
+        done();
       });
   });
-  it('should fail if shipping region is invalid', () => {
+  it('should fail if shipping region is invalid', (done) => {
     const user = {
       address_1: 'kdjhdfhfhfjfjfhfhfh',
       address_2: 'kdjhdfhfhfjfjfhfhfh',
@@ -966,14 +1017,15 @@ describe('Updating customers address', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid Shipping Region');
-        expect(res.body.code).to.equal(USR_INVALID_SHIPPING_ID);
+        expect(res.body.error.message).to.equal('Invalid Shipping Region');
+        expect(res.body.error.code).to.equal(USR_INVALID_SHIPPING_ID);
+        done();
       });
   });
 });
 
 describe('Updating customers credit card', () => {
-  it('should succeed if fields are valid and not return password', () => {
+  it('should succeed if fields are valid and not return password', (done) => {
     const user = {
       credit_card: '837366749474647885'
     };
@@ -986,10 +1038,11 @@ describe('Updating customers credit card', () => {
         expect(res.status).to.equal(200);
         expect(res.body.credit_card).to.equal(user.credit_card);
         should.not.exist(res.body.password);
+        done();
       });
   });
 
-  it('should fail if api key is invalid', () => {
+  it('should fail if api key is invalid', (done) => {
     const user = {
       credit_card: '837366749474647885'
     };
@@ -999,12 +1052,13 @@ describe('Updating customers credit card', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('The apikey is invalid');
-        expect(res.body.code).to.equal(AUT_UNAUTHORIZED);
+        expect(res.body.error.message).to.equal('The apikey is invalid');
+        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        done();
       });
   });
 
-  it('should fail if api key is not provided', () => {
+  it('should fail if api key is not provided', (done) => {
     const user = {
       credit_card: '837366749474647885'
     };
@@ -1013,11 +1067,12 @@ describe('Updating customers credit card', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('There is no api key');
-        expect(res.body.code).to.equal(AUT_EMPTY_CODE);
+        expect(res.body.error.message).to.equal('There is no api key');
+        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        done();
       });
   });
-  it('should fail if credit_card is not provided', () => {
+  it('should fail if credit_card is not provided', (done) => {
     const user = {};
     chai.request(app)
       .put(`${currApiPrefix}/customers/creditCard`)
@@ -1025,11 +1080,12 @@ describe('Updating customers credit card', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('The credit card field is required');
-        expect(res.body.code).to.equal(USR_REQUIRED_FIELD);
+        expect(res.body.error.message).to.equal('The credit card field is required');
+        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        done();
       });
   });
-  it('should fail if credit_card is invalid', () => {
+  it('should fail if credit_card is invalid', (done) => {
     const user = {
       credit_card: '8373'
     };
@@ -1039,8 +1095,9 @@ describe('Updating customers credit card', () => {
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('Invalid credit card details');
-        expect(res.body.code).to.equal(USR_INVALID_CARD);
+        expect(res.body.error.message).to.equal('Invalid credit card details');
+        expect(res.body.error.code).to.equal(USR_INVALID_CARD);
+        done();
       });
   });
 });
