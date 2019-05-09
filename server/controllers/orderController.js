@@ -25,10 +25,18 @@ export default {
     try {
       const createdOrder = await db.query(queries.createNew('orders'), newOrder);
       const { insertId } = createdOrder;
-      await db.query(queries.createNew('order_detail'), { order_id: insertId });
-      res.status(200).send({ orderId: insertId });
+      const orderDetails = {
+        order_id: insertId,
+        product_id: 0,
+        attributes: '',
+        product_name: '',
+        quantity: 0,
+        unit_cost: 0
+      };
+      await db.query(queries.createNew('order_detail'), orderDetails);
+      return res.status(200).send({ orderId: insertId });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
   getOrder: async (req, res) => {
@@ -45,7 +53,7 @@ export default {
       const subtotal = quantity && unit_price ? Number(unit_price) * quantity : 0;
       return res.status(200).send({ ...requestedOrderDetails, subtotal });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
   getBriefOrder: async (req, res) => {
@@ -61,7 +69,7 @@ export default {
 
       return res.status(200).send({ ...requestedOrder });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
   getCustomerOrders: async (req, res) => {
@@ -71,7 +79,7 @@ export default {
       const getOrdersResponse = await db.query(queries.getAllByValue('orders', 'customer_id'), id);
       return res.status(200).send({ orders: getOrdersResponse });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   }
 };

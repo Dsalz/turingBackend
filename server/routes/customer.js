@@ -11,8 +11,8 @@ const customerRouter = express.Router();
 
 // Route for signing new customers up
 customerRouter.post('/customers',
-  validator.validateName(true),
-  validator.validateEmail(true),
+  validator.validateName(),
+  validator.validateEmail(),
   validator.validatePassword(true),
   validator.validatePhoneNumbers(),
   validator.validateCreditCard(),
@@ -20,15 +20,15 @@ customerRouter.post('/customers',
 
 // Route for logging customers in
 customerRouter.post('/customers/login',
-  validator.validateEmail(true),
+  validator.validateEmail(),
   validator.validatePassword(true),
   customerController.logCustomerIn);
 
 // Route for updating customer information
 customerRouter.put('/customer',
   tokenizer.verifyToken,
-  validator.validateName(true),
-  validator.validateEmail(true),
+  validator.validateName(),
+  validator.validateEmail(),
   validator.validatePassword(),
   validator.validatePhoneNumbers(),
   customerController.updateCustomer);

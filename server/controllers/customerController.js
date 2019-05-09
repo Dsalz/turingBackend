@@ -47,9 +47,9 @@ export default {
       delete createdCustomer.password;
       const { customer_id } = createdCustomer;
       const token = await tokenizer.createToken({ id: customer_id, email });
-      res.status(200).send({ message: 'User successfully created', customer: { schema: createdCustomer }, accessToken: `Bearer ${token}`, expires_in: '24h' });
+      return res.status(200).send({ message: 'User successfully created', customer: { schema: createdCustomer }, accessToken: `Bearer ${token}`, expires_in: '24h' });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
   logCustomerIn: async (req, res) => {
@@ -69,9 +69,9 @@ export default {
       delete existingUser.password;
       const { customer_id } = existingUser;
       const token = await tokenizer.createToken({ id: customer_id, email });
-      res.status(200).send({ message: 'User successfully logged in', customer: { schema: existingUser }, accessToken: `Bearer ${token}`, expires_in: '24h' });
+      return res.status(200).send({ message: 'User successfully logged in', customer: { schema: existingUser }, accessToken: `Bearer ${token}`, expires_in: '24h' });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
   updateCustomer: async (req, res) => {
@@ -89,9 +89,9 @@ export default {
       await db.query(queries.updateByEmail('customer'), [updatedCustomer, email]);
       delete user.password;
       delete updatedCustomer.password;
-      res.status(200).send({ ...user, ...updatedCustomer });
+      return res.status(200).send({ ...user, ...updatedCustomer });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
   getCustomer: async (req, res) => {
@@ -100,9 +100,9 @@ export default {
       const getUserResponse = await db.query(queries.getById('customer', 'customer_id'), id);
       const user = getUserResponse[0];
       delete user.password;
-      res.status(200).send({ ...user });
+      return res.status(200).send({ ...user });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
   updateCustomerAddress: async (req, res) => {
@@ -131,9 +131,9 @@ export default {
       const user = getUserResponse[0];
       await db.query(queries.updateByEmail('customer'), [updatedCustomer, email]);
       delete user.password;
-      res.status(200).send({ ...user, ...updatedCustomer });
+      return res.status(200).send({ ...user, ...updatedCustomer });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
   updateCustomerCreditCard: async (req, res) => {
@@ -146,9 +146,9 @@ export default {
       const user = getUserResponse[0];
       await db.query(queries.updateByEmail('customer'), [updatedCustomer, email]);
       delete user.password;
-      res.status(200).send({ ...user, ...updatedCustomer });
+      return res.status(200).send({ ...user, ...updatedCustomer });
     } catch (err) {
-      res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
   },
 };

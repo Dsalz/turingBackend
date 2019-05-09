@@ -3,10 +3,10 @@ import { USR_REQUIRED_FIELD, USR_INVALID_FIELD, USR_INVALID_SHIPPING_ID, USR_INV
 import responses from '../misc/responses';
 
 export default {
-  validateEmail: (required = false) => (req, res, next) => {
+  validateEmail: () => (req, res, next) => {
     const { email } = req.body;
     const emailRegex = /\S[@]\S+[.]\S/;
-    if (!email && required) {
+    if (!email) {
       return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'The email field is required', 'email'));
     }
     if ((email && typeof email !== 'string') || (email && !(emailRegex.test(email)))) {
@@ -15,9 +15,9 @@ export default {
 
     return next();
   },
-  validateName: (required = false) => (req, res, next) => {
+  validateName: () => (req, res, next) => {
     const { name } = req.body;
-    if (!name && required) {
+    if (!name) {
       return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'The name field is required', 'name'));
     }
     return next();
