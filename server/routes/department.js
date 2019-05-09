@@ -9,7 +9,7 @@ const departmentRouter = express.Router();
 departmentRouter.get('/departments',
   departmentController.getAllDepartments);
 
-// Route for getting order by id
+// Route for getting department by id
 departmentRouter.get('/departments/:id',
   departmentController.getDepartment);
 

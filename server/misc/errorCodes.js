@@ -21,6 +21,9 @@ export const USR_INVALID_FIELD = 'USR_10';
 // Order Errors
 export const ORD_NOT_FOUND = 'ORD_01';
 
+// Product Errors
+export const PRO_NOT_FOUND = 'PRO_01';
+
 // Catergory Errors
 export const CAT_NOT_FOUND = 'CAT_01';
 

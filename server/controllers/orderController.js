@@ -67,7 +67,7 @@ export default {
         return res.status(400).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
       }
 
-      return res.status(200).send({ ...requestedOrder });
+      return res.status(200).send(requestedOrder);
     } catch (err) {
       return res.status(500).send({ message: err });
     }

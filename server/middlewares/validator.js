@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { USR_REQUIRED_FIELD, USR_INVALID_FIELD, USR_INVALID_SHIPPING_ID, USR_INVALID_EMAIL, USR_INVALID_EMAIL_PASSWORD, USR_INVALID_PHONE, USR_INVALID_CARD } from '../misc/errorCodes';
+import { USR_REQUIRED_FIELD, USR_INVALID_FIELD, USR_INVALID_SHIPPING_ID, USR_INVALID_EMAIL, USR_INVALID_EMAIL_PASSWORD, USR_INVALID_PHONE, USR_INVALID_CARD, PAG_ORDER_NOT_MATCHED } from '../misc/errorCodes';
 import responses from '../misc/responses';
 
 export default {
@@ -146,6 +146,25 @@ export default {
       return res.status(404).send({ error: { message: 'Endpoint not found' } });
     }
 
+    return next();
+  },
+  validatePaginationQuery: () => async (req, res, next) => {
+    const { order, page, limit } = req.query;
+    const loweredOrder = order ? order.toLowerCase() : '';
+
+    if (order && loweredOrder !== 'asc' && loweredOrder !== 'desc') {
+      return res.status(400).send(responses.invalidField(PAG_ORDER_NOT_MATCHED, 'Invalid order', 'order'));
+    }
+
+    if (limit && /\D/g.test(limit)) {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid limit', 'limit'));
+    }
+
+    if (page && /\D/g.test(page)) {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid page', 'page'));
+    }
+
+    req.query.order = loweredOrder;
     return next();
   }
 };

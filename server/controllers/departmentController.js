@@ -19,7 +19,7 @@ export default {
       if (!requestedDepartment) {
         return res.status(400).send(responses.invalidField(DEP_NOT_FOUND, 'Department with Id does not exist', 'id'));
       }
-      return res.status(200).send({ ...requestedDepartment });
+      return res.status(200).send(requestedDepartment);
     } catch (err) {
       return res.status(500).send({ message: err });
     }

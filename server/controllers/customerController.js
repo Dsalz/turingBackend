@@ -100,7 +100,7 @@ export default {
       const getUserResponse = await db.query(queries.getById('customer', 'customer_id'), id);
       const user = getUserResponse[0];
       delete user.password;
-      return res.status(200).send({ ...user });
+      return res.status(200).send(user);
     } catch (err) {
       return res.status(500).send({ message: err });
     }
