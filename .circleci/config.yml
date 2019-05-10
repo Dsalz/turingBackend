@@ -3,9 +3,7 @@ jobs:
  build:
   docker:
    - image: circleci/node:latest
-   - image: "mysql:8.0"
-        ports:
-          - "3306:3306"
+   - image: circleci/mysql:latest
         environment:
           MYSQL_DATABASE: cXBmCDuY1h
           MYSQL_USER: cXBmCDuY1h
