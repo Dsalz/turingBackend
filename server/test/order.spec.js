@@ -9,6 +9,7 @@ import {
   AUT_EMPTY_CODE,
   AUT_UNAUTHORIZED,
   USR_INVALID_FIELD,
+  ORD_NOT_FOUND
 } from '../misc/errorCodes';
 
 chai.use(chaihttp);
@@ -43,7 +44,6 @@ describe('Creating an order', () => {
       cart_id: '2',
       shipping_id: 21,
       tax_id: 222,
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -61,7 +61,6 @@ describe('Creating an order', () => {
       cart_id: '2',
       shipping_id: 21,
       tax_id: 222,
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -79,7 +78,6 @@ describe('Creating an order', () => {
       cart_id: '2',
       shipping_id: 21,
       tax_id: 222,
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -95,7 +93,6 @@ describe('Creating an order', () => {
     const newOrder = {
       shipping_id: 21,
       tax_id: 222,
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -114,7 +111,6 @@ describe('Creating an order', () => {
       cart_id: 23,
       shipping_id: 21,
       tax_id: 222,
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -132,7 +128,6 @@ describe('Creating an order', () => {
     const newOrder = {
       cart_id: '22',
       tax_id: 222,
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -151,7 +146,6 @@ describe('Creating an order', () => {
       cart_id: '23',
       shipping_id: '21',
       tax_id: 222,
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -169,7 +163,6 @@ describe('Creating an order', () => {
     const newOrder = {
       cart_id: '22',
       shipping_id: 222,
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -188,7 +181,6 @@ describe('Creating an order', () => {
       cart_id: '23',
       shipping_id: 21,
       tax_id: '222',
-      comments: 'bring it fast',
     };
     chai.request(app)
       .post(`${currApiPrefix}/orders`)
@@ -199,25 +191,6 @@ describe('Creating an order', () => {
         expect(res.status).to.equal(400);
         expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
         expect(res.body.error.message).to.equal('Invalid Tax Id');
-        done();
-      });
-  });
-  it('should fail if comment is invalid', (done) => {
-    const newOrder = {
-      cart_id: '23',
-      shipping_id: 21,
-      tax_id: 222,
-      comments: 93756,
-    };
-    chai.request(app)
-      .post(`${currApiPrefix}/orders`)
-      .set('USER-KEY', `${userToken}`)
-      .send(newOrder)
-      .end((err, res) => {
-        should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
-        expect(res.body.error.message).to.equal('Invalid Comment');
         done();
       });
   });
@@ -309,14 +282,13 @@ describe('Getting full order details', () => {
         done();
       });
   });
-  it('should succeed if id is valid', (done) => {
+  it('should fail if order does not exist', (done) => {
     chai.request(app)
-      .get(`${currApiPrefix}/orders/${orderId}`)
+      .get(`${currApiPrefix}/orders/300092344858`)
       .set('USER-KEY', `${userToken}`)
       .end((err, res) => {
-        should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.order_id).to.equal(orderId);
+        expect(res.status).to.equal(404);
+        expect(res.body.error.code).to.equal(ORD_NOT_FOUND);
         done();
       });
   });

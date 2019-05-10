@@ -9,32 +9,13 @@ export default {
     const {
       cart_id,
       shipping_id,
-      tax_id,
-      comments,
+      tax_id
     } = req.body;
     const { id } = req.user;
-    const newOrder = {
-      reference: cart_id,
-      shipping_id,
-      tax_id,
-      customer_id: id,
-      created_on: new Date(),
-      comments,
-    };
-
     try {
-      const createdOrder = await db.query(queries.createNew('orders'), newOrder);
-      const { insertId } = createdOrder;
-      const orderDetails = {
-        order_id: insertId,
-        product_id: 0,
-        attributes: '',
-        product_name: '',
-        quantity: 0,
-        unit_cost: 0
-      };
-      await db.query(queries.createNew('order_detail'), orderDetails);
-      return res.status(200).send({ orderId: insertId });
+      const createdOrderResponse = await db.query(queries.createOrderProcedure,
+        [cart_id, id, shipping_id, tax_id]);
+      return res.status(200).send(createdOrderResponse[0][0]);
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -43,15 +24,13 @@ export default {
     const { id } = req.params;
 
     try {
-      const getOrderDetailsResponse = await db.query(queries.getAllByValue('order_detail', 'order_id'), id);
-      const requestedOrderDetails = getOrderDetailsResponse[0];
+      const getOrderDetailsResponse = await db.query(queries.getOrderDetailsProcedure, id);
+      const requestedOrderDetails = getOrderDetailsResponse[0][0];
 
       if (!requestedOrderDetails) {
-        return res.status(400).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
+        return res.status(404).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
       }
-      const { quantity, unit_price } = requestedOrderDetails;
-      const subtotal = quantity && unit_price ? Number(unit_price) * quantity : 0;
-      return res.status(200).send({ ...requestedOrderDetails, subtotal });
+      return res.status(200).send(requestedOrderDetails);
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -60,11 +39,11 @@ export default {
     const { id } = req.params;
 
     try {
-      const getOrderResponse = await db.query(queries.getById('orders', 'order_id'), id);
-      const requestedOrder = getOrderResponse[0];
+      const getOrderResponse = await db.query(queries.getBriefOrderDetailsProcedure, id);
+      const requestedOrder = getOrderResponse[0][0];
 
       if (!requestedOrder) {
-        return res.status(400).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
+        return res.status(404).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
       }
 
       return res.status(200).send(requestedOrder);
@@ -76,8 +55,8 @@ export default {
     const { id } = req.user;
 
     try {
-      const getOrdersResponse = await db.query(queries.getAllByValue('orders', 'customer_id'), id);
-      return res.status(200).send({ orders: getOrdersResponse });
+      const getOrdersResponse = await db.query(queries.getCustomerOrdersProcedure, id);
+      return res.status(200).send({ orders: getOrdersResponse[0] });
     } catch (err) {
       return res.status(500).send({ message: err });
     }

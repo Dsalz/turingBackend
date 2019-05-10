@@ -112,8 +112,7 @@ export default {
     const {
       cart_id,
       shipping_id,
-      tax_id,
-      comments,
+      tax_id
     } = req.body;
     if (!cart_id) {
       return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'The cart id is required', 'cart_id'));
@@ -132,9 +131,6 @@ export default {
     }
     if (typeof tax_id !== 'number') {
       return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid Tax Id', 'tax_id'));
-    }
-    if (comments && typeof comments !== 'string') {
-      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid Comment', 'comment'));
     }
     return next();
   },

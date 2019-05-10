@@ -24,6 +24,9 @@ export const ORD_NOT_FOUND = 'ORD_01';
 // Product Errors
 export const PRO_NOT_FOUND = 'PRO_01';
 
+// Attribute Errors
+export const ATT_NOT_FOUND = 'ATT_01';
+
 // Catergory Errors
 export const CAT_NOT_FOUND = 'CAT_01';
 

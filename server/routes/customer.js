@@ -14,8 +14,6 @@ customerRouter.post('/customers',
   validator.validateName(),
   validator.validateEmail(),
   validator.validatePassword(true),
-  validator.validatePhoneNumbers(),
-  validator.validateCreditCard(),
   customerController.signCustomerUp);
 
 // Route for logging customers in

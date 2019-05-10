@@ -13,21 +13,21 @@ export default {
       return res.status(400).send(responses.invalidField(DEP_INVALID_ID, 'Invalid department id', 'id'));
     }
     try {
-      const getDepartmentResponse = await db.query(queries.getById('department', 'department_id'), id);
-      const requestedDepartment = getDepartmentResponse[0];
+      const getDepartmentResponse = await db.query(queries.getDepartmentProcedure, id);
+      const requestedDepartment = getDepartmentResponse[0][0];
 
       if (!requestedDepartment) {
         return res.status(400).send(responses.invalidField(DEP_NOT_FOUND, 'Department with Id does not exist', 'id'));
       }
-      return res.status(200).send(requestedDepartment);
+      return res.status(200).send({ department_id: Number(id), ...requestedDepartment });
     } catch (err) {
       return res.status(500).send({ message: err });
     }
   },
   getAllDepartments: async (req, res) => {
     try {
-      const getDepartmentsResponse = await db.query(queries.getAll('department'));
-      return res.status(200).send({ departments: getDepartmentsResponse });
+      const getDepartmentsResponse = await db.query(queries.getAllDepartmentsProcedure);
+      return res.status(200).send({ departments: getDepartmentsResponse[0] });
     } catch (err) {
       return res.status(500).send({ message: err });
     }

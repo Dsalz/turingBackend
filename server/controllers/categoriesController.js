@@ -25,16 +25,11 @@ export default {
     const { id } = req.params;
 
     try {
-      const getProductResponse = await db.query(queries.getById('product_category', 'product_id'), id);
-      const requestedProduct = getProductResponse[0];
-      if (!requestedProduct) {
+      const getCategoryResponse = await db.query(queries.getProductCategoriesProcedure, id);
+      const requestedCategory = getCategoryResponse[0][0];
+      if (!requestedCategory) {
         return res.status(404).send(responses.invalidField(PRO_NOT_FOUND, 'Product with id does not exist', 'id'));
       }
-
-      const { category_id } = requestedProduct;
-
-      const getCategoryResponse = await db.query(queries.getById('category', 'category_id'), category_id);
-      const requestedCategory = getCategoryResponse[0];
       return res.status(200).send([requestedCategory]);
     } catch (err) {
       return res.status(500).send({ message: err });
