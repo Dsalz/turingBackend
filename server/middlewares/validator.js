@@ -21,7 +21,14 @@ import queries from '../database/queries';
 import responses from '../misc/responses';
 
 export default {
-  validateEmail: () => (req, res, next) => {
+  /**
+   * @description middleware method for validating email field passed in body
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateEmail: (req, res, next) => {
     const { email } = req.body;
     const emailRegex = /\S[@]\S+[.]\S/;
     if (!email) {
@@ -33,13 +40,25 @@ export default {
 
     return next();
   },
-  validateName: () => (req, res, next) => {
+  /**
+   * @description middleware method for validating name field passed in body
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateName: (req, res, next) => {
     const { name } = req.body;
     if (!name) {
       return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'The name field is required', 'name'));
     }
     return next();
   },
+  /**
+   * @description method for returning middleware to validate password field passed in body
+   * @param {bool} required - Boolean value depicting if password is required for route or not
+   * @returns {undefined}
+   */
   validatePassword: (required = false) => (req, res, next) => {
     const { password } = req.body;
     if (!password && required) {
@@ -50,7 +69,14 @@ export default {
     }
     return next();
   },
-  validatePhoneNumbers: () => (req, res, next) => {
+  /**
+   * @description middleware method for validating all phone number fields passed in body
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validatePhoneNumbers: (req, res, next) => {
     const { day_phone, eve_phone, mob_phone } = req.body;
     if (day_phone && String(day_phone).length < 7) {
       return res.status(400).send(responses.invalidField(USR_INVALID_PHONE, 'Invalid phone number', 'day_phone'));
@@ -63,10 +89,16 @@ export default {
     }
     return next();
   },
-
-  validateCreditCard: (required = false) => (req, res, next) => {
+  /**
+   * @description middleware method for validating credit card field passed in body
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateCreditCard: (req, res, next) => {
     const { credit_card } = req.body;
-    if (!credit_card && required) {
+    if (!credit_card) {
       return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'The credit card field is required', 'credit_card'));
     }
     if (credit_card && String(credit_card).length < 7) {
@@ -75,6 +107,13 @@ export default {
     return next();
   },
 
+  /**
+   * @description middleware method for validating address fields passed in body
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateAddress: (req, res, next) => {
     const {
       address_1,
@@ -126,6 +165,14 @@ export default {
     }
     return next();
   },
+
+  /**
+   * @description middleware method for validating order fields passed in body
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateOrder: (req, res, next) => {
     const {
       cart_id,
@@ -152,6 +199,13 @@ export default {
     }
     return next();
   },
+  /**
+   * @description middleware method for validating id passed in route
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validatePathId: async (req, res, next) => {
     const { id } = req.params;
     const invalidNumber = /\D/g.test(id);
@@ -162,6 +216,13 @@ export default {
 
     return next();
   },
+  /**
+   * @description middleware method for validating pagination fields passed as queries in route
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validatePaginationQuery: async (req, res, next) => {
     const { order, page, limit, description_length, all_words } = req.query;
     const loweredOrder = order ? order.toLowerCase() : '';
@@ -189,6 +250,14 @@ export default {
     req.query.order = loweredOrder;
     return next();
   },
+
+  /**
+   * @description middleware method for validating query string passed as a query in the route
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateSearchQuery: async (req, res, next) => {
     const { query_string } = req.query;
     if (!query_string) {
@@ -197,6 +266,14 @@ export default {
 
     return next();
   },
+
+  /**
+   * @description middleware method for validating review fields passed in body
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateReview: async (req, res, next) => {
     const { review, rating } = req.body;
     if (!review) {
@@ -217,6 +294,15 @@ export default {
 
     return next();
   },
+  /**
+   * @description middleware method for validating product id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateProductId: async (req, res, next) => {
     const { id } = req.params;
     const getProductResponse = await db.query(queries.getProductByIdProcedure, id);
@@ -228,6 +314,15 @@ export default {
     req.requestedProduct = requestedProduct;
     return next();
   },
+  /**
+   * @description middleware method for validating department id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateDepartmentId: async (req, res, next) => {
     const { id } = req.params;
     const invalidNumber = /\D/g.test(id);
@@ -244,6 +339,16 @@ export default {
     req.requestedDepartment = requestedDepartment;
     return next();
   },
+
+  /**
+   * @description middleware method for validating category id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateCategoryId: async (req, res, next) => {
     const { id } = req.params;
     const getCategoryResponse = await db.query(queries.getById('category', 'category_id'), id);
@@ -255,6 +360,16 @@ export default {
     req.requestedCategory = requestedCategory;
     return next();
   },
+
+  /**
+   * @description middleware method for validating attribute id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateAttributeId: async (req, res, next) => {
     const { id } = req.params;
     const getAttributeResponse = await db.query(queries.getById('attribute', 'attribute_id'), id);
@@ -266,6 +381,16 @@ export default {
     req.requestedAttribute = requestedAttribute;
     return next();
   },
+
+  /**
+   * @description middleware method for validating order id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateOrderId: async (req, res, next) => {
     const { id } = req.params;
     const getOrderResponse = await db.query(queries.getBriefOrderDetailsProcedure, id);
@@ -277,6 +402,16 @@ export default {
     req.requestedOrder = requestedOrder;
     return next();
   },
+
+  /**
+   * @description middleware method for validating tax id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateTaxId: async (req, res, next) => {
     const { id } = req.params;
     const getTaxResponse = await db.query(queries.getById('tax', 'tax_id'), id);
@@ -288,6 +423,16 @@ export default {
     req.requestedTax = requestedTax;
     return next();
   },
+
+  /**
+   * @description middleware method for validating shipping region id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
   validateShippingRegionId: async (req, res, next) => {
     const { id } = req.params;
     const getRegionResponse = await db.query(queries.getShippingRegionByIdProcedure, id);
@@ -297,6 +442,55 @@ export default {
       return res.status(404).send(responses.invalidField(USR_INVALID_SHIPPING_ID, 'Shipping Region with Id does not exist', 'id'));
     }
     req.requestedShippingRegion = requestedRegion;
+    return next();
+  },
+
+  /**
+   * @description middleware method for validating stripe charge fields passed in body
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateStripeCharge: async (req, res, next) => {
+    const { stripeToken, order_id, description, amount, currency } = req.body;
+
+    if (!stripeToken) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Stripe token is required', 'stripeToken'));
+    }
+
+    if (typeof stripeToken !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid stripe token', 'stripeToken'));
+    }
+    if (!order_id) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Order id is required', 'order_id'));
+    }
+
+    if (typeof order_id !== 'number') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid order id', 'order_id'));
+    }
+    if (!description) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Description is required', 'description'));
+    }
+
+    if (typeof description !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid description', 'description'));
+    }
+    if (!amount) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Amount is required', 'amount'));
+    }
+
+    if (typeof amount !== 'number') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid amount', 'amount'));
+    }
+    if (currency && typeof currency !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid currency', 'currency'));
+    }
+    const getOrderResponse = await db.query(queries.getBriefOrderDetailsProcedure, order_id);
+    const requestedOrder = getOrderResponse[0][0];
+    if (!requestedOrder) {
+      return res.status(404).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
+    }
     return next();
   },
 };

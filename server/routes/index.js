@@ -9,6 +9,7 @@ import attributeRouter from './attribute';
 import productRouter from './product';
 import taxRouter from './tax';
 import shippingRegionRouter from './shippingRegion';
+import stripeRouter from './stripe';
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use(attributeRouter);
 router.use(productRouter);
 router.use(taxRouter);
 router.use(shippingRegionRouter);
+router.use(stripeRouter);
 
 export default router;
