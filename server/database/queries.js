@@ -17,6 +17,7 @@ export default {
   getBriefOrderDetailsProcedure: 'CALL orders_get_order_short_details(?)',
   getCustomerOrdersProcedure: 'CALL orders_get_by_customer_id(?)',
   createOrderProcedure: 'CALL shopping_cart_create_order(?,?,?,?)',
+  updateOrderStatusProcedure: 'CALL orders_update_status(?,?)',
 
   // Department Procedures
   getDepartmentProcedure: 'CALL catalog_get_department_details(?)',

@@ -23,10 +23,11 @@ describe('Getting all categories', () => {
       .get(`${currApiPrefix}/categories`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { categories, page } = res.body;
-        expect(categories).to.be.an('array');
-        expect(categories[0]).to.be.an('object');
+        const { status, body } = res;
+        const { rows, page } = body;
+        expect(status).to.equal(200);
+        expect(rows).to.be.an('array');
+        expect(rows[0]).to.be.an('object');
         expect(page).to.equal(1);
         done();
       });
@@ -36,14 +37,15 @@ describe('Getting all categories', () => {
       .get(`${currApiPrefix}/categories?order=DESC&limit=4&page=1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { categories, page, limit, total } = res.body;
-        expect(categories).to.be.an('array');
-        expect(categories.length).to.equal(4);
-        expect(categories[0]).to.be.an('object');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        const { rows, page, limit, count } = body;
+        expect(rows).to.be.an('array');
+        expect(rows.length).to.equal(4);
+        expect(rows[0]).to.be.an('object');
         expect(page).to.equal(1);
         expect(limit).to.equal(4);
-        expect(total).to.be.a('number');
+        expect(count).to.be.a('number');
         done();
       });
   });
@@ -52,13 +54,14 @@ describe('Getting all categories', () => {
       .get(`${currApiPrefix}/categories?order=DESC&limit=4&page=2`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { categories, page, limit, total } = res.body;
-        expect(categories).to.be.an('array');
-        expect(categories[0]).to.be.an('object');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        const { rows, page, limit, count } = body;
+        expect(rows).to.be.an('array');
+        expect(rows[0]).to.be.an('object');
         expect(page).to.equal(2);
         expect(limit).to.equal(4);
-        expect(total).to.be.a('number');
+        expect(count).to.be.a('number');
         done();
       });
   });
@@ -67,14 +70,15 @@ describe('Getting all categories', () => {
       .get(`${currApiPrefix}/categories?order=ASC&limit=4&page=1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { categories, page, limit, total } = res.body;
-        expect(categories[0].category_id).to.equal(1);
-        expect(categories).to.be.an('array');
-        expect(categories[0]).to.be.an('object');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        const { rows, page, limit, count } = body;
+        expect(rows[0].category_id).to.equal(1);
+        expect(rows).to.be.an('array');
+        expect(rows[0]).to.be.an('object');
         expect(page).to.equal(1);
         expect(limit).to.equal(4);
-        expect(total).to.be.a('number');
+        expect(count).to.be.a('number');
         done();
       });
   });
@@ -83,14 +87,15 @@ describe('Getting all categories', () => {
       .get(`${currApiPrefix}/categories?order=DESC&limit=4&page=1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { categories, page, limit, total } = res.body;
-        expect(categories[0].category_id).to.equal(total);
-        expect(categories).to.be.an('array');
-        expect(categories[0]).to.be.an('object');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        const { rows, page, limit, count } = body;
+        expect(rows[0].category_id).to.equal(count);
+        expect(rows).to.be.an('array');
+        expect(rows[0]).to.be.an('object');
         expect(page).to.equal(1);
         expect(limit).to.equal(4);
-        expect(total).to.be.a('number');
+        expect(count).to.be.a('number');
         done();
       });
   });
@@ -99,9 +104,10 @@ describe('Getting all categories', () => {
       .get(`${currApiPrefix}/categories?order=abc&limit=4&page=1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(PAG_ORDER_NOT_MATCHED);
-        expect(res.body.error.message).to.equal('Invalid order');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(PAG_ORDER_NOT_MATCHED);
+        expect(body.error.message).to.equal('Invalid order');
         done();
       });
   });
@@ -110,9 +116,10 @@ describe('Getting all categories', () => {
       .get(`${currApiPrefix}/categories?order=ASC&limit=4b&page=1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
-        expect(res.body.error.message).to.equal('Invalid limit');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
+        expect(body.error.message).to.equal('Invalid limit');
         done();
       });
   });
@@ -121,9 +128,10 @@ describe('Getting all categories', () => {
       .get(`${currApiPrefix}/categories?order=ASC&limit=4&page=1b`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
-        expect(res.body.error.message).to.equal('Invalid page');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
+        expect(body.error.message).to.equal('Invalid page');
         done();
       });
   });
@@ -135,9 +143,10 @@ describe('Getting category by id', () => {
       .get(`${currApiPrefix}/categories/1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.category_id).to.equal(1);
-        expect(res.body.name).to.equal('French');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body.category_id).to.equal(1);
+        expect(body.name).to.equal('French');
         done();
       });
   });
@@ -146,8 +155,9 @@ describe('Getting category by id', () => {
       .get(`${currApiPrefix}/categories/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });
@@ -156,9 +166,10 @@ describe('Getting category by id', () => {
       .get(`${currApiPrefix}/categories/10000000`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.code).to.equal(CAT_NOT_FOUND);
-        expect(res.body.error.message).to.equal('Category with id does not exist');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.code).to.equal(CAT_NOT_FOUND);
+        expect(body.error.message).to.equal('Category with id does not exist');
         done();
       });
   });
@@ -170,10 +181,11 @@ describe('Getting category by product id', () => {
       .get(`${currApiPrefix}/categories/inProduct/1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body).to.be.an('array');
-        expect(res.body[0].category_id).to.equal(1);
-        expect(res.body[0].name).to.equal('French');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body).to.be.an('array');
+        expect(body[0].category_id).to.equal(1);
+        expect(body[0].name).to.equal('French');
         done();
       });
   });
@@ -182,8 +194,9 @@ describe('Getting category by product id', () => {
       .get(`${currApiPrefix}/categories/inProduct/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });
@@ -192,9 +205,10 @@ describe('Getting category by product id', () => {
       .get(`${currApiPrefix}/categories/inProduct/10000000`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.code).to.equal(PRO_NOT_FOUND);
-        expect(res.body.error.message).to.equal('Product with Id does not exist');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.code).to.equal(PRO_NOT_FOUND);
+        expect(body.error.message).to.equal('Product with Id does not exist');
         done();
       });
   });
@@ -206,11 +220,12 @@ describe('Getting category by department id', () => {
       .get(`${currApiPrefix}/categories/inDepartment/1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body).to.be.an('array');
-        expect(res.body[0].department_id).to.equal(1);
-        expect(res.body[1].department_id).to.equal(1);
-        expect(res.body[2].department_id).to.equal(1);
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body).to.be.an('array');
+        expect(body[0].department_id).to.equal(1);
+        expect(body[1].department_id).to.equal(1);
+        expect(body[2].department_id).to.equal(1);
         done();
       });
   });
@@ -219,8 +234,9 @@ describe('Getting category by department id', () => {
       .get(`${currApiPrefix}/categories/inDepartment/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });

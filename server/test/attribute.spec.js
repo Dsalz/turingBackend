@@ -20,12 +20,13 @@ describe('Getting all attribute', () => {
       .get(`${currApiPrefix}/attributes`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.attributes).to.be.an('array');
-        expect(res.body.attributes[0].attribute_id).to.equal(1);
-        expect(res.body.attributes[0].name).to.equal('Size');
-        expect(res.body.attributes[1].attribute_id).to.equal(2);
-        expect(res.body.attributes[1].name).to.equal('Color');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body).to.be.an('array');
+        expect(body[0].attribute_id).to.equal(1);
+        expect(body[0].name).to.equal('Size');
+        expect(body[1].attribute_id).to.equal(2);
+        expect(body[1].name).to.equal('Color');
         done();
       });
   });
@@ -37,9 +38,10 @@ describe('Getting attribute by id', () => {
       .get(`${currApiPrefix}/attributes/1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.attribute_id).to.equal(1);
-        expect(res.body.name).to.equal('Size');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body.attribute_id).to.equal(1);
+        expect(body.name).to.equal('Size');
         done();
       });
   });
@@ -48,8 +50,9 @@ describe('Getting attribute by id', () => {
       .get(`${currApiPrefix}/attributes/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });
@@ -58,9 +61,10 @@ describe('Getting attribute by id', () => {
       .get(`${currApiPrefix}/attributes/10000000`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.code).to.equal(ATT_NOT_FOUND);
-        expect(res.body.error.message).to.equal('Attribute with Id does not exist');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.code).to.equal(ATT_NOT_FOUND);
+        expect(body.error.message).to.equal('Attribute with Id does not exist');
         done();
       });
   });
@@ -72,18 +76,19 @@ describe('Getting attribute values', () => {
       .get(`${currApiPrefix}/attributes/values/1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body).to.be.an('array');
-        expect(res.body[0].attribute_id).to.equal(1);
-        expect(res.body[0].value).to.equal('S');
-        expect(res.body[1].attribute_id).to.equal(1);
-        expect(res.body[1].value).to.equal('M');
-        expect(res.body[2].attribute_id).to.equal(1);
-        expect(res.body[2].value).to.equal('L');
-        expect(res.body[3].attribute_id).to.equal(1);
-        expect(res.body[3].value).to.equal('XL');
-        expect(res.body[4].attribute_id).to.equal(1);
-        expect(res.body[4].value).to.equal('XXL');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body).to.be.an('array');
+        expect(body[0].attribute_id).to.equal(1);
+        expect(body[0].value).to.equal('S');
+        expect(body[1].attribute_id).to.equal(1);
+        expect(body[1].value).to.equal('M');
+        expect(body[2].attribute_id).to.equal(1);
+        expect(body[2].value).to.equal('L');
+        expect(body[3].attribute_id).to.equal(1);
+        expect(body[3].value).to.equal('XL');
+        expect(body[4].attribute_id).to.equal(1);
+        expect(body[4].value).to.equal('XXL');
         done();
       });
   });
@@ -92,8 +97,9 @@ describe('Getting attribute values', () => {
       .get(`${currApiPrefix}/attributes/values/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });
@@ -105,8 +111,8 @@ describe('Getting attribute by product', () => {
       .get(`${currApiPrefix}/attributes/inProduct/1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { body } = res;
+        const { status, body } = res;
+        expect(status).to.equal(200);
         expect(body).to.be.an('array');
         expect(body[0].attribute_name).to.equal('Color');
         expect(body[0].attribute_value_id).to.equal(6);
@@ -122,8 +128,9 @@ describe('Getting attribute by product', () => {
       .get(`${currApiPrefix}/attributes/inProduct/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });

@@ -4,6 +4,12 @@ import queries from '../database/queries';
 import helperUtils from '../misc/helperUtils';
 
 export default {
+  /**
+   * @description method for getting product by id
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} product data
+   */
   getProductById: async (req, res) => {
     const { requestedProduct } = req;
     try {
@@ -12,6 +18,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for getting product details
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} product details
+   */
   getProductDetails: async (req, res) => {
     const { id } = req.params;
     try {
@@ -22,6 +34,13 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+
+  /**
+   * @description method for getting product location
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} productlocation data
+   */
   getProductLocation: async (req, res) => {
     const { id } = req.params;
     try {
@@ -32,6 +51,13 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+
+  /**
+   * @description method for getting product reviews
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {array} product reviews
+   */
   getProductReviews: async (req, res) => {
     const { id } = req.params;
     try {
@@ -42,6 +68,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for adding product review
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {undefined}
+   */
   postProductReview: async (req, res) => {
     const { id } = req.params;
     const { rating, review } = req.body;
@@ -53,6 +85,13 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+
+  /**
+   * @description method for getting products by category
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} total number of results and array of results
+   */
   getProductByCategory: async (req, res) => {
     const { id } = req.params;
     let { page, limit, description_length } = req.query;
@@ -66,13 +105,19 @@ export default {
       const countProductResponse = await db.query(queries.countProductsByCategoryProcedure, id);
       const requestedProducts = getProductResponse[0];
       return res.status(200).send({
-        total: countProductResponse[0][0].categories_count,
+        count: countProductResponse[0][0].categories_count,
         rows: requestedProducts
       });
     } catch (err) {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for getting products by department
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} total number of results and array of results
+   */
   getProductByDepartment: async (req, res) => {
     const { id } = req.params;
     let { page, limit, description_length } = req.query;
@@ -86,13 +131,20 @@ export default {
       const countProductResponse = await db.query(queries.countProductsByDepartmentProcedure, id);
       const requestedProducts = getProductResponse[0];
       return res.status(200).send({
-        total: countProductResponse[0][0].products_on_department_count,
+        count: countProductResponse[0][0].products_on_department_count,
         rows: requestedProducts
       });
     } catch (err) {
       return res.status(500).send({ message: err });
     }
   },
+
+  /**
+   * @description method for getting and paginating all products
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} total number of results and array of results
+   */
   getAllProducts: async (req, res) => {
     let { page, limit, description_length } = req.query;
     page = page || 1;
@@ -103,13 +155,20 @@ export default {
     try {
       const getProductsResponse = await db.query(queries.getAllProductsProcedure, dbInfo);
       return res.status(200).send({
-        total: getProductsResponse.length,
+        count: getProductsResponse.length,
         rows: helperUtils.paginateData(getProductsResponse, page, limit)
       });
     } catch (err) {
       return res.status(500).send({ message: err });
     }
   },
+
+  /**
+   * @description method for searching through products
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} total number of results and array of results
+   */
   searchProducts: async (req, res) => {
     const { query_string } = req.query;
     let { page, limit, description_length, all_words } = req.query;
@@ -124,7 +183,7 @@ export default {
       const countProductsResponse = await db.query(queries.countProductSearchProcedure,
         [query_string, all_words]);
       return res.status(200).send({
-        total: countProductsResponse[0][0]['count(*)'],
+        count: countProductsResponse[0][0]['count(*)'],
         rows: getProductsResponse[0]
       });
     } catch (err) {

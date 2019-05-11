@@ -3,6 +3,12 @@ import db from '../database/config';
 import queries from '../database/queries';
 
 export default {
+  /**
+   * @description method for getting shipping region by id
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} shipping region data
+   */
   getShippingRegion: async (req, res) => {
     const { requestedShippingRegion } = req;
     try {
@@ -11,6 +17,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for getting all shipping regions
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {array} all shipping regions
+   */
   getAllShippingRegions: async (req, res) => {
     try {
       const getShippingRegionsResponse = await db.query(queries.getAllShippingRegionsProcedure);

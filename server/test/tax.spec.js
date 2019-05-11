@@ -20,8 +20,8 @@ describe('Getting all tax', () => {
       .get(`${currApiPrefix}/tax`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { body } = res;
+        const { status, body } = res;
+        expect(status).to.equal(200);
         expect(body).to.be.an('array');
         expect(body[0].tax_id).to.equal(1);
         expect(body[1].tax_id).to.equal(2);
@@ -36,8 +36,8 @@ describe('Getting tax by id', () => {
       .get(`${currApiPrefix}/tax/2`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { body } = res;
+        const { status, body } = res;
+        expect(status).to.equal(200);
         expect(body.tax_id).to.equal(2);
         done();
       });
@@ -47,8 +47,9 @@ describe('Getting tax by id', () => {
       .get(`${currApiPrefix}/tax/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });
@@ -57,9 +58,10 @@ describe('Getting tax by id', () => {
       .get(`${currApiPrefix}/tax/10000000`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.code).to.equal(TAX_NOT_FOUND);
-        expect(res.body.error.message).to.equal('Tax with Id does not exist');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.code).to.equal(TAX_NOT_FOUND);
+        expect(body.error.message).to.equal('Tax with Id does not exist');
         done();
       });
   });

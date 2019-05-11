@@ -38,8 +38,9 @@ before((done) => {
     .send(newUser)
     .end((err, res) => {
       should.not.exist(err);
-      expect(res.status).to.equal(200);
-      userToken = res.body.accessToken;
+      const { status, body } = res;
+      expect(status).to.equal(200);
+      userToken = body.accessToken;
       done();
     });
 });
@@ -56,11 +57,12 @@ describe('Signing customer up', () => {
       .send(newUser)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('User successfully created');
-        should.not.exist(res.body.customer.schema.password);
-        expect(res.body.customer.schema.email).to.equal(newUser.email);
-        expect(res.body.customer.schema.name).to.equal(newUser.name);
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body.message).to.equal('User successfully created');
+        should.not.exist(body.customer.schema.password);
+        expect(body.customer.schema.email).to.equal(newUser.email);
+        expect(body.customer.schema.name).to.equal(newUser.name);
         done();
       });
   });
@@ -74,9 +76,10 @@ describe('Signing customer up', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The name field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The name field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -91,9 +94,10 @@ describe('Signing customer up', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The name field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The name field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -107,9 +111,10 @@ describe('Signing customer up', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The email field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The email field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -122,9 +127,10 @@ describe('Signing customer up', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The email field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The email field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -138,9 +144,10 @@ describe('Signing customer up', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Email');
-        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Email');
+        expect(body.error.code).to.equal(USR_INVALID_EMAIL);
         done();
       });
   });
@@ -153,9 +160,10 @@ describe('Signing customer up', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The password field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The password field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -169,9 +177,10 @@ describe('Signing customer up', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Password');
-        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Password');
+        expect(body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
         done();
       });
   });
@@ -185,9 +194,10 @@ describe('Signing customer up', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Email already exists');
-        expect(res.body.error.code).to.equal(USR_EMAIL_ALREADY_EXISTS);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Email already exists');
+        expect(body.error.code).to.equal(USR_EMAIL_ALREADY_EXISTS);
         done();
       });
   });
@@ -204,10 +214,11 @@ describe('Logging customers in', () => {
       .send(user)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('User successfully logged in');
-        should.not.exist(res.body.customer.schema.password);
-        expect(res.body.customer.schema.email).to.equal(user.email);
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body.message).to.equal('User successfully logged in');
+        should.not.exist(body.customer.schema.password);
+        expect(body.customer.schema.email).to.equal(user.email);
         done();
       });
   });
@@ -221,9 +232,10 @@ describe('Logging customers in', () => {
       .post(`${currApiPrefix}/customers/login`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('User with email does not exist');
-        expect(res.body.error.code).to.equal(USR_EMAIL_NOT_FOUND);
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('User with email does not exist');
+        expect(body.error.code).to.equal(USR_EMAIL_NOT_FOUND);
         done();
       });
   });
@@ -237,9 +249,10 @@ describe('Logging customers in', () => {
       .post(`${currApiPrefix}/customers/login`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('Invalid password');
-        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('Invalid password');
+        expect(body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
         done();
       });
   });
@@ -253,9 +266,10 @@ describe('Logging customers in', () => {
       .post(`${currApiPrefix}/customers/login`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The email field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The email field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -267,9 +281,10 @@ describe('Logging customers in', () => {
       .post(`${currApiPrefix}/customers/login`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The email field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The email field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -282,9 +297,10 @@ describe('Logging customers in', () => {
       .post(`${currApiPrefix}/customers/login`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Email');
-        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Email');
+        expect(body.error.code).to.equal(USR_INVALID_EMAIL);
         done();
       });
   });
@@ -296,9 +312,10 @@ describe('Logging customers in', () => {
       .post(`${currApiPrefix}/customers/login`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The password field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The password field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -311,9 +328,10 @@ describe('Logging customers in', () => {
       .post(`${currApiPrefix}/customers/login`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Password');
-        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Password');
+        expect(body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
         done();
       });
   });
@@ -330,8 +348,9 @@ describe('Updating customers information', () => {
       .post(`${currApiPrefix}/customers`)
       .send(newUser)
       .end((err, res) => {
+        const { status } = res;
         should.not.exist(err);
-        expect(res.status).to.equal(200);
+        expect(status).to.equal(200);
         done();
       });
   });
@@ -349,14 +368,15 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
+        const { status, body } = res;
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.email).to.equal(user.email);
-        expect(res.body.name).to.equal(user.name);
-        expect(res.body.day_phone).to.equal(user.day_phone);
-        expect(res.body.eve_phone).to.equal(user.eve_phone);
-        expect(res.body.mob_phone).to.equal(user.mob_phone);
-        should.not.exist(res.body.password);
+        expect(status).to.equal(200);
+        expect(body.email).to.equal(user.email);
+        expect(body.name).to.equal(user.name);
+        expect(body.day_phone).to.equal(user.day_phone);
+        expect(body.eve_phone).to.equal(user.eve_phone);
+        expect(body.mob_phone).to.equal(user.mob_phone);
+        should.not.exist(body.password);
         done();
       });
   });
@@ -371,11 +391,12 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
+        const { status, body } = res;
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.email).to.equal(user.email);
-        expect(res.body.name).to.equal(user.name);
-        should.not.exist(res.body.password);
+        expect(status).to.equal(200);
+        expect(body.email).to.equal(user.email);
+        expect(body.name).to.equal(user.name);
+        should.not.exist(body.password);
         done();
       });
   });
@@ -394,9 +415,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${wrongToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('The apikey is invalid');
-        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('The apikey is invalid');
+        expect(body.error.code).to.equal(AUT_UNAUTHORIZED);
         done();
       });
   });
@@ -414,9 +436,10 @@ describe('Updating customers information', () => {
       .put(`${currApiPrefix}/customer`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('There is no api key');
-        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('There is no api key');
+        expect(body.error.code).to.equal(AUT_EMPTY_CODE);
         done();
       });
   });
@@ -434,9 +457,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Email already exists');
-        expect(res.body.error.code).to.equal(USR_EMAIL_ALREADY_EXISTS);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Email already exists');
+        expect(body.error.code).to.equal(USR_EMAIL_ALREADY_EXISTS);
         done();
       });
   });
@@ -453,9 +477,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The email field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The email field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -473,9 +498,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Email');
-        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Email');
+        expect(body.error.code).to.equal(USR_INVALID_EMAIL);
         done();
       });
   });
@@ -492,9 +518,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The name field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The name field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -512,9 +539,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Password');
-        expect(res.body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Password');
+        expect(body.error.code).to.equal(USR_INVALID_EMAIL_PASSWORD);
         done();
       });
   });
@@ -531,9 +559,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid phone number');
-        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid phone number');
+        expect(body.error.code).to.equal(USR_INVALID_PHONE);
         done();
       });
   });
@@ -550,9 +579,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid phone number');
-        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid phone number');
+        expect(body.error.code).to.equal(USR_INVALID_PHONE);
         done();
       });
   });
@@ -569,9 +599,10 @@ describe('Updating customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid phone number');
-        expect(res.body.error.code).to.equal(USR_INVALID_PHONE);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid phone number');
+        expect(body.error.code).to.equal(USR_INVALID_PHONE);
         done();
       });
   });
@@ -584,10 +615,11 @@ describe('Get customers information', () => {
       .set('USER-KEY', `${userToken}`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.name).to.equal('Damola');
-        expect(res.body.email).to.equal('duplicationtestemail@yahoo.com');
-        should.not.exist(res.body.password);
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body.name).to.equal('Damola');
+        expect(body.email).to.equal('duplicationtestemail@yahoo.com');
+        should.not.exist(body.password);
         done();
       });
   });
@@ -597,9 +629,10 @@ describe('Get customers information', () => {
       .get(`${currApiPrefix}/customer`)
       .set('USER-KEY', `${wrongToken}`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('The apikey is invalid');
-        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('The apikey is invalid');
+        expect(body.error.code).to.equal(AUT_UNAUTHORIZED);
         done();
       });
   });
@@ -608,9 +641,10 @@ describe('Get customers information', () => {
     chai.request(app)
       .get(`${currApiPrefix}/customer`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('There is no api key');
-        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('There is no api key');
+        expect(body.error.code).to.equal(AUT_EMPTY_CODE);
         done();
       });
   });
@@ -632,15 +666,16 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
+        const { status, body } = res;
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.address_1).to.equal(user.address_1);
-        expect(res.body.address_2).to.equal(user.address_2);
-        expect(res.body.city).to.equal(user.city);
-        expect(res.body.region).to.equal(user.region);
-        expect(res.body.postal_code).to.equal(user.postal_code);
-        expect(res.body.shipping_region_id).to.equal(user.shipping_region_id);
-        should.not.exist(res.body.password);
+        expect(status).to.equal(200);
+        expect(body.address_1).to.equal(user.address_1);
+        expect(body.address_2).to.equal(user.address_2);
+        expect(body.city).to.equal(user.city);
+        expect(body.region).to.equal(user.region);
+        expect(body.postal_code).to.equal(user.postal_code);
+        expect(body.shipping_region_id).to.equal(user.shipping_region_id);
+        should.not.exist(body.password);
         done();
       });
   });
@@ -660,9 +695,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${wrongToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('The apikey is invalid');
-        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('The apikey is invalid');
+        expect(body.error.code).to.equal(AUT_UNAUTHORIZED);
         done();
       });
   });
@@ -681,9 +717,10 @@ describe('Updating customers address', () => {
       .put(`${currApiPrefix}/customers/address`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('There is no api key');
-        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('There is no api key');
+        expect(body.error.code).to.equal(AUT_EMPTY_CODE);
         done();
       });
   });
@@ -701,9 +738,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The address field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The address field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -722,9 +760,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Address');
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Address');
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
         done();
       });
   });
@@ -743,9 +782,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Address');
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Address');
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
         done();
       });
   });
@@ -763,9 +803,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The city field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The city field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -784,9 +825,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid City');
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid City');
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
         done();
       });
   });
@@ -804,9 +846,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The region field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The region field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -825,9 +868,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Region');
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Region');
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
         done();
       });
   });
@@ -845,9 +889,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The postal code field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The postal code field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -866,9 +911,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Postal Code');
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Postal Code');
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
         done();
       });
   });
@@ -886,9 +932,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The country field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The country field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -907,9 +954,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Country');
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Country');
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
         done();
       });
   });
@@ -927,9 +975,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The shipping region field is required');
-        expect(res.body.error.code).to.equal(USR_INVALID_SHIPPING_ID);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The shipping region field is required');
+        expect(body.error.code).to.equal(USR_INVALID_SHIPPING_ID);
         done();
       });
   });
@@ -948,9 +997,10 @@ describe('Updating customers address', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid Shipping Region');
-        expect(res.body.error.code).to.equal(USR_INVALID_SHIPPING_ID);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid Shipping Region');
+        expect(body.error.code).to.equal(USR_INVALID_SHIPPING_ID);
         done();
       });
   });
@@ -966,10 +1016,11 @@ describe('Updating customers credit card', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
+        const { status, body } = res;
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.credit_card).to.equal(user.credit_card);
-        should.not.exist(res.body.password);
+        expect(status).to.equal(200);
+        expect(body.credit_card).to.equal(user.credit_card);
+        should.not.exist(body.password);
         done();
       });
   });
@@ -983,9 +1034,10 @@ describe('Updating customers credit card', () => {
       .set('USER-KEY', `${wrongToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('The apikey is invalid');
-        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('The apikey is invalid');
+        expect(body.error.code).to.equal(AUT_UNAUTHORIZED);
         done();
       });
   });
@@ -998,9 +1050,10 @@ describe('Updating customers credit card', () => {
       .put(`${currApiPrefix}/customers/creditCard`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('There is no api key');
-        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('There is no api key');
+        expect(body.error.code).to.equal(AUT_EMPTY_CODE);
         done();
       });
   });
@@ -1011,9 +1064,10 @@ describe('Updating customers credit card', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('The credit card field is required');
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('The credit card field is required');
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
         done();
       });
   });
@@ -1026,9 +1080,10 @@ describe('Updating customers credit card', () => {
       .set('USER-KEY', `${userToken}`)
       .send(user)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.error.message).to.equal('Invalid credit card details');
-        expect(res.body.error.code).to.equal(USR_INVALID_CARD);
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.message).to.equal('Invalid credit card details');
+        expect(body.error.code).to.equal(USR_INVALID_CARD);
         done();
       });
   });

@@ -18,8 +18,8 @@ describe('Getting all shipping regions', () => {
       .get(`${currApiPrefix}/shipping/regions`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { body } = res;
+        const { status, body } = res;
+        expect(status).to.equal(200);
         expect(body).to.be.an('array');
         expect(body[0].shipping_region_id).to.equal(1);
         expect(body[1].shipping_region_id).to.equal(2);
@@ -35,8 +35,8 @@ describe('Getting shipping regions by id', () => {
       .get(`${currApiPrefix}/shipping/regions/2`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        const { body } = res;
+        const { status, body } = res;
+        expect(status).to.equal(200);
         expect(body).to.be.an('array');
         expect(body[0].shipping_region_id).to.equal(2);
         expect(body[1].shipping_region_id).to.equal(2);
@@ -48,8 +48,9 @@ describe('Getting shipping regions by id', () => {
       .get(`${currApiPrefix}/shipping/regions/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });
@@ -58,8 +59,9 @@ describe('Getting shipping regions by id', () => {
       .get(`${currApiPrefix}/shipping/regions/10000000`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        const { code, message } = res.body.error;
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        const { code, message } = body.error;
         expect(code).to.equal(USR_INVALID_SHIPPING_ID);
         expect(message).to.equal('Shipping Region with Id does not exist');
         done();

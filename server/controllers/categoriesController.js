@@ -4,6 +4,12 @@ import queries from '../database/queries';
 import helperUtils from '../misc/helperUtils';
 
 export default {
+  /**
+   * @description method for getting category by id
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} category data
+   */
   getCategoryById: async (req, res) => {
     const { requestedCategory } = req;
     try {
@@ -12,6 +18,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for getting category by product
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} category data
+   */
   getCategoryByProduct: async (req, res) => {
     const { id } = req.params;
 
@@ -23,6 +35,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for getting category by department
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} category data
+   */
   getCategoryByDepartment: async (req, res) => {
     const { id } = req.params;
 
@@ -33,16 +51,22 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for getting and paginating all categories
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} category data
+   */
   getAllCategories: async (req, res) => {
     const { order, page, limit } = req.query;
     const orderSort = order === 'desc' ? 'desc' : 'asc';
     try {
       const getCategoriesResponse = await db.query(queries.getAllAndSort('category', 'category_id', orderSort));
-      const total = getCategoriesResponse.length;
+      const count = getCategoriesResponse.length;
       return res.status(200).send({
-        categories: helperUtils.paginateData(getCategoriesResponse, page, limit),
-        limit: Number(limit) || total,
-        total,
+        count,
+        rows: helperUtils.paginateData(getCategoriesResponse, page, limit),
+        limit: Number(limit) || count,
         page: Number(page) || 1
       });
     } catch (err) {

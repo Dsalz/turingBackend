@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   describe, it
 } from 'mocha';
@@ -21,11 +22,12 @@ describe('Getting all departments', () => {
       .get(`${currApiPrefix}/departments`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.departments).to.be.an('array');
-        expect(res.body.departments[0].department_id).to.equal(1);
-        expect(res.body.departments[1].department_id).to.equal(2);
-        expect(res.body.departments[2].department_id).to.equal(3);
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body).to.be.an('array');
+        expect(body[0].department_id).to.equal(1);
+        expect(body[1].department_id).to.equal(2);
+        expect(body[2].department_id).to.equal(3);
         done();
       });
   });
@@ -37,10 +39,12 @@ describe('Getting department by id', () => {
       .get(`${currApiPrefix}/departments/1`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.department_id).to.equal(1);
-        expect(res.body.name).to.equal('Regional');
-        expect(res.body.description).to.equal('Proud of your country? Wear a T-shirt with a national symbol stamp!');
+        const { status, body } = res;
+        const { department_id, name, description } = body;
+        expect(status).to.equal(200);
+        expect(department_id).to.equal(1);
+        expect(name).to.equal('Regional');
+        expect(description).to.equal('Proud of your country? Wear a T-shirt with a national symbol stamp!');
         done();
       });
   });
@@ -49,9 +53,11 @@ describe('Getting department by id', () => {
       .get(`${currApiPrefix}/departments/zz`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(DEP_INVALID_ID);
-        expect(res.body.error.message).to.equal('Invalid department id');
+        const { status, body } = res;
+        const { code, message } = body.error;
+        expect(status).to.equal(400);
+        expect(code).to.equal(DEP_INVALID_ID);
+        expect(message).to.equal('Invalid department id');
         done();
       });
   });
@@ -60,9 +66,11 @@ describe('Getting department by id', () => {
       .get(`${currApiPrefix}/departments/10000000`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.error.code).to.equal(DEP_NOT_FOUND);
-        expect(res.body.error.message).to.equal('Department with Id does not exist');
+        const { status, body } = res;
+        const { code, message } = body.error;
+        expect(status).to.equal(404);
+        expect(code).to.equal(DEP_NOT_FOUND);
+        expect(message).to.equal('Department with Id does not exist');
         done();
       });
   });

@@ -27,11 +27,11 @@ describe('Getting all products', () => {
       .end((err, res) => {
         should.not.exist(err);
         expect(res.status).to.equal(200);
-        const { rows, total } = res.body;
+        const { rows, count } = res.body;
         expect(rows).to.be.an('array');
         expect(rows.length).to.be.greaterThan(1);
-        expect(total).to.be.a('number');
-        expect(total).to.equal(rows.length);
+        expect(count).to.be.a('number');
+        expect(count).to.equal(rows.length);
         done();
       });
   });
@@ -41,11 +41,11 @@ describe('Getting all products', () => {
       .end((err, res) => {
         should.not.exist(err);
         expect(res.status).to.equal(200);
-        const { rows, total } = res.body;
+        const { rows, count } = res.body;
         expect(rows).to.be.an('array');
         expect(rows.length).to.equal(2);
-        expect(total).to.be.a('number');
-        expect(total).to.not.equal(rows.length);
+        expect(count).to.be.a('number');
+        expect(count).to.not.equal(rows.length);
         done();
       });
   });
@@ -413,7 +413,7 @@ describe('Getting product by category', () => {
       .end((err, res) => {
         should.not.exist(err);
         expect(res.status).to.equal(200);
-        expect(res.body.total).to.be.a('number');
+        expect(res.body.count).to.be.a('number');
         expect(res.body.rows).to.be.an('array');
         done();
       });
@@ -424,8 +424,8 @@ describe('Getting product by category', () => {
       .end((err, res) => {
         should.not.exist(err);
         expect(res.status).to.equal(200);
-        const { total, rows } = res.body;
-        expect(total).to.be.a('number');
+        const { count, rows } = res.body;
+        expect(count).to.be.a('number');
         expect(rows).to.be.an('array');
         expect(rows.length).to.equal(2);
         done();
@@ -474,7 +474,7 @@ describe('Getting product by department', () => {
       .end((err, res) => {
         should.not.exist(err);
         expect(res.status).to.equal(200);
-        expect(res.body.total).to.be.a('number');
+        expect(res.body.count).to.be.a('number');
         expect(res.body.rows).to.be.an('array');
         done();
       });
@@ -485,8 +485,8 @@ describe('Getting product by department', () => {
       .end((err, res) => {
         should.not.exist(err);
         expect(res.status).to.equal(200);
-        const { total, rows } = res.body;
-        expect(total).to.be.a('number');
+        const { count, rows } = res.body;
+        expect(count).to.be.a('number');
         expect(rows).to.be.an('array');
         expect(rows.length).to.equal(2);
         done();
@@ -535,11 +535,11 @@ describe('Searching for product', () => {
       .end((err, res) => {
         should.not.exist(err);
         expect(res.status).to.equal(200);
-        const { rows, total } = res.body;
+        const { rows, count } = res.body;
         expect(rows).to.be.an('array');
         expect(rows[0].name).to.contain('Coat');
-        expect(total).to.be.a('number');
-        expect(total).to.equal(rows.length);
+        expect(count).to.be.a('number');
+        expect(count).to.equal(rows.length);
         done();
       });
   });
@@ -549,11 +549,11 @@ describe('Searching for product', () => {
       .end((err, res) => {
         should.not.exist(err);
         expect(res.status).to.equal(200);
-        const { rows, total } = res.body;
+        const { rows, count } = res.body;
         expect(rows).to.be.an('array');
         expect(rows.length).to.equal(1);
         expect(rows[0].name).to.contain('Coat');
-        expect(total).to.be.a('number');
+        expect(count).to.be.a('number');
         done();
       });
   });

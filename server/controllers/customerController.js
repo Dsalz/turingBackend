@@ -6,6 +6,13 @@ import queries from '../database/queries';
 import tokenizer from '../middlewares/tokenizer';
 
 export default {
+
+  /**
+   * @description method for signing customer up
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} customer data
+   */
   signCustomerUp: async (req, res) => {
     const {
       name,
@@ -30,6 +37,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for logging customer in
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} customer data
+   */
   logCustomerIn: async (req, res) => {
     const {
       email,
@@ -55,6 +68,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for updating customer details
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} customer's updated data
+   */
   updateCustomer: async (req, res) => {
     const { id } = req.user;
     const { name, email, password, day_phone, eve_phone, mob_phone } = req.body;
@@ -78,6 +97,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for getting logged in customer's details
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} customer data
+   */
   getCustomer: async (req, res) => {
     const { id } = req.user;
     try {
@@ -90,6 +115,13 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+
+  /**
+   * @description method for updating customer address
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} customer's updated data
+   */
   updateCustomerAddress: async (req, res) => {
     const { id } = req.user;
     const {
@@ -116,6 +148,12 @@ export default {
       return res.status(500).send({ message: err });
     }
   },
+  /**
+   * @description method for updating customer's credit card data
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} customer's updated data
+   */
   updateCustomerCreditCard: async (req, res) => {
     const { id } = req.user;
     const { credit_card } = req.body;

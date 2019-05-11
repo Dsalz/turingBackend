@@ -32,8 +32,9 @@ before((done) => {
     .send(newUser)
     .end((err, res) => {
       should.not.exist(err);
-      expect(res.status).to.equal(200);
-      userToken = res.body.accessToken;
+      const { status, body } = res;
+      expect(status).to.equal(200);
+      userToken = body.accessToken;
       done();
     });
 });
@@ -51,8 +52,9 @@ describe('Creating an order', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.orderId).to.be.a('number');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body.orderId).to.be.a('number');
         done();
       });
   });
@@ -67,9 +69,10 @@ describe('Creating an order', () => {
       .set('USER-KEY', `${wrongToken}`)
       .send(newOrder)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('The apikey is invalid');
-        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('The apikey is invalid');
+        expect(body.error.code).to.equal(AUT_UNAUTHORIZED);
         done();
       });
   });
@@ -83,9 +86,10 @@ describe('Creating an order', () => {
       .post(`${currApiPrefix}/orders`)
       .send(newOrder)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('There is no api key');
-        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('There is no api key');
+        expect(body.error.code).to.equal(AUT_EMPTY_CODE);
         done();
       });
   });
@@ -100,9 +104,10 @@ describe('Creating an order', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
-        expect(res.body.error.message).to.equal('The cart id is required');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
+        expect(body.error.message).to.equal('The cart id is required');
         done();
       });
   });
@@ -118,9 +123,10 @@ describe('Creating an order', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
-        expect(res.body.error.message).to.equal('Invalid Cart Id');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
+        expect(body.error.message).to.equal('Invalid Cart Id');
         done();
       });
   });
@@ -135,9 +141,10 @@ describe('Creating an order', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
-        expect(res.body.error.message).to.equal('The shipping id is required');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
+        expect(body.error.message).to.equal('The shipping id is required');
         done();
       });
   });
@@ -153,9 +160,10 @@ describe('Creating an order', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
-        expect(res.body.error.message).to.equal('Invalid Shipping Id');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
+        expect(body.error.message).to.equal('Invalid Shipping Id');
         done();
       });
   });
@@ -170,9 +178,10 @@ describe('Creating an order', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_REQUIRED_FIELD);
-        expect(res.body.error.message).to.equal('The tax id is required');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(USR_REQUIRED_FIELD);
+        expect(body.error.message).to.equal('The tax id is required');
         done();
       });
   });
@@ -188,9 +197,10 @@ describe('Creating an order', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
-        expect(res.body.error.code).to.equal(USR_INVALID_FIELD);
-        expect(res.body.error.message).to.equal('Invalid Tax Id');
+        const { status, body } = res;
+        expect(status).to.equal(400);
+        expect(body.error.code).to.equal(USR_INVALID_FIELD);
+        expect(body.error.message).to.equal('Invalid Tax Id');
         done();
       });
   });
@@ -211,9 +221,10 @@ describe('Getting short order details', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
+        const { status, body } = res;
+        expect(status).to.equal(200);
         // eslint-disable-next-line prefer-destructuring
-        orderId = res.body.orderId;
+        orderId = body.orderId;
         done();
       });
   });
@@ -223,8 +234,9 @@ describe('Getting short order details', () => {
       .set('USER-KEY', `${userToken}`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.order_id).to.equal(orderId);
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body.order_id).to.equal(orderId);
         done();
       });
   });
@@ -233,9 +245,10 @@ describe('Getting short order details', () => {
       .get(`${currApiPrefix}/orders/shortDetail/${orderId}`)
       .set('USER-KEY', `${wrongToken}`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('The apikey is invalid');
-        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('The apikey is invalid');
+        expect(body.error.code).to.equal(AUT_UNAUTHORIZED);
         done();
       });
   });
@@ -243,9 +256,10 @@ describe('Getting short order details', () => {
     chai.request(app)
       .get(`${currApiPrefix}/orders/shortDetail/${orderId}`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('There is no api key');
-        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('There is no api key');
+        expect(body.error.code).to.equal(AUT_EMPTY_CODE);
         done();
       });
   });
@@ -254,8 +268,9 @@ describe('Getting short order details', () => {
       .get(`${currApiPrefix}/orders/shortDetail/o11c2`)
       .set('USER-KEY', `${userToken}`)
       .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });
@@ -276,9 +291,10 @@ describe('Getting full order details', () => {
       .send(newOrder)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
+        const { status, body } = res;
+        expect(status).to.equal(200);
         // eslint-disable-next-line prefer-destructuring
-        orderId = res.body.orderId;
+        orderId = body.orderId;
         done();
       });
   });
@@ -287,8 +303,9 @@ describe('Getting full order details', () => {
       .get(`${currApiPrefix}/orders/300092344858`)
       .set('USER-KEY', `${userToken}`)
       .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body.error.code).to.equal(ORD_NOT_FOUND);
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.code).to.equal(ORD_NOT_FOUND);
         done();
       });
   });
@@ -297,9 +314,10 @@ describe('Getting full order details', () => {
       .get(`${currApiPrefix}/orders/${orderId}`)
       .set('USER-KEY', `${wrongToken}`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('The apikey is invalid');
-        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('The apikey is invalid');
+        expect(body.error.code).to.equal(AUT_UNAUTHORIZED);
         done();
       });
   });
@@ -307,9 +325,10 @@ describe('Getting full order details', () => {
     chai.request(app)
       .get(`${currApiPrefix}/orders/${orderId}`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('There is no api key');
-        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('There is no api key');
+        expect(body.error.code).to.equal(AUT_EMPTY_CODE);
         done();
       });
   });
@@ -318,8 +337,9 @@ describe('Getting full order details', () => {
       .get(`${currApiPrefix}/orders/o11c2`)
       .set('USER-KEY', `${userToken}`)
       .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body.error.message).to.equal('Endpoint not found');
+        const { status, body } = res;
+        expect(status).to.equal(404);
+        expect(body.error.message).to.equal('Endpoint not found');
         done();
       });
   });
@@ -332,8 +352,9 @@ describe('Getting all customer orders', () => {
       .set('USER-KEY', `${userToken}`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.orders).to.be.an('array');
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body).to.be.an('array');
         done();
       });
   });
@@ -342,9 +363,10 @@ describe('Getting all customer orders', () => {
       .get(`${currApiPrefix}/orders/inCustomer`)
       .set('USER-KEY', `${wrongToken}`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('The apikey is invalid');
-        expect(res.body.error.code).to.equal(AUT_UNAUTHORIZED);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('The apikey is invalid');
+        expect(body.error.code).to.equal(AUT_UNAUTHORIZED);
         done();
       });
   });
@@ -352,9 +374,10 @@ describe('Getting all customer orders', () => {
     chai.request(app)
       .get(`${currApiPrefix}/orders/inCustomer`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.error.message).to.equal('There is no api key');
-        expect(res.body.error.code).to.equal(AUT_EMPTY_CODE);
+        const { status, body } = res;
+        expect(status).to.equal(401);
+        expect(body.error.message).to.equal('There is no api key');
+        expect(body.error.code).to.equal(AUT_EMPTY_CODE);
         done();
       });
   });

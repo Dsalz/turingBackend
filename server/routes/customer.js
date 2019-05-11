@@ -11,24 +11,24 @@ const customerRouter = express.Router();
 
 // Route for signing new customers up
 customerRouter.post('/customers',
-  validator.validateName(),
-  validator.validateEmail(),
+  validator.validateName,
+  validator.validateEmail,
   validator.validatePassword(true),
   customerController.signCustomerUp);
 
 // Route for logging customers in
 customerRouter.post('/customers/login',
-  validator.validateEmail(),
+  validator.validateEmail,
   validator.validatePassword(true),
   customerController.logCustomerIn);
 
 // Route for updating customer information
 customerRouter.put('/customer',
   tokenizer.verifyToken,
-  validator.validateName(),
-  validator.validateEmail(),
+  validator.validateName,
+  validator.validateEmail,
   validator.validatePassword(),
-  validator.validatePhoneNumbers(),
+  validator.validatePhoneNumbers,
   customerController.updateCustomer);
 
 // Route for getting customer information
@@ -45,7 +45,7 @@ customerRouter.put('/customers/address',
 // Route for updating customer credit card
 customerRouter.put('/customers/creditCard',
   tokenizer.verifyToken,
-  validator.validateCreditCard(true),
+  validator.validateCreditCard,
   customerController.updateCustomerCreditCard);
 
 

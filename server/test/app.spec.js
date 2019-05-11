@@ -16,9 +16,10 @@ describe('Navigating to an invalid route', () => {
     chai.request(app)
       .get(`${currApiPrefix}/totallynotexistingroute`)
       .end((err, res) => {
+        const { status, body } = res;
         should.not.exist(err);
-        expect(res.status).to.equal(404);
-        expect(res.body.message).to.equal('Route not found');
+        expect(status).to.equal(404);
+        expect(body.message).to.equal('Route not found');
       });
   });
 });
