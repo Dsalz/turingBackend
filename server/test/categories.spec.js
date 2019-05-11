@@ -194,7 +194,7 @@ describe('Getting category by product id', () => {
         should.not.exist(err);
         expect(res.status).to.equal(404);
         expect(res.body.error.code).to.equal(PRO_NOT_FOUND);
-        expect(res.body.error.message).to.equal('Product with id does not exist');
+        expect(res.body.error.message).to.equal('Product with Id does not exist');
         done();
       });
   });

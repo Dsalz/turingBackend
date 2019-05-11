@@ -14,17 +14,20 @@ attributeRouter.get('/attributes',
 
 // Route for getting attribute values
 attributeRouter.get('/attributes/values/:id',
-  validator.validatePathId(),
+  validator.validatePathId,
+  validator.validateAttributeId,
   attributeController.getAttributeValues);
 
 // Route for getting attribute values by product id
 attributeRouter.get('/attributes/inProduct/:id',
-  validator.validatePathId(),
+  validator.validatePathId,
+  validator.validateProductId,
   attributeController.getAttributeByProduct);
 
 // Route for getting attribute by id
 attributeRouter.get('/attributes/:id',
-  validator.validatePathId(),
+  validator.validatePathId,
+  validator.validateAttributeId,
   attributeController.getAttributeById);
 
 

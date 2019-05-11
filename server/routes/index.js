@@ -7,6 +7,8 @@ import departmentRouter from './department';
 import categoryRouter from './categories';
 import attributeRouter from './attribute';
 import productRouter from './product';
+import taxRouter from './tax';
+import shippingRegionRouter from './shippingRegion';
 
 const router = express.Router();
 
@@ -16,5 +18,7 @@ router.use(departmentRouter);
 router.use(categoryRouter);
 router.use(attributeRouter);
 router.use(productRouter);
+router.use(taxRouter);
+router.use(shippingRegionRouter);
 
 export default router;

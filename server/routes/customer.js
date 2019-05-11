@@ -39,7 +39,7 @@ customerRouter.get('/customer',
 // Route for updating customer address
 customerRouter.put('/customers/address',
   tokenizer.verifyToken,
-  validator.validateAddress(),
+  validator.validateAddress,
   customerController.updateCustomerAddress);
 
 // Route for updating customer credit card

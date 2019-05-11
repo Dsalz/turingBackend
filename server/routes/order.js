@@ -12,13 +12,14 @@ const orderRouter = express.Router();
 // Route for creating new orders
 orderRouter.post('/orders',
   tokenizer.verifyToken,
-  validator.validateOrder(),
+  validator.validateOrder,
   orderController.createOrder);
 
 // Route for getting brief order details by id
 orderRouter.get('/orders/shortDetail/:id',
   tokenizer.verifyToken,
-  validator.validatePathId(),
+  validator.validatePathId,
+  validator.validateOrderId,
   orderController.getBriefOrder);
 
 // Route for getting orders by logged in customer
@@ -29,7 +30,8 @@ orderRouter.get('/orders/inCustomer',
 // Route for getting order by id
 orderRouter.get('/orders/:id',
   tokenizer.verifyToken,
-  validator.validatePathId(),
+  validator.validatePathId,
+  validator.validateOrderId,
   orderController.getOrder);
 
 

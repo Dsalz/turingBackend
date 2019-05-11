@@ -1,5 +1,23 @@
 /* eslint-disable camelcase */
-import { USR_REQUIRED_FIELD, USR_INVALID_FIELD, USR_INVALID_SHIPPING_ID, USR_INVALID_EMAIL, USR_INVALID_EMAIL_PASSWORD, USR_INVALID_PHONE, USR_INVALID_CARD, PAG_ORDER_NOT_MATCHED } from '../misc/errorCodes';
+import {
+  USR_REQUIRED_FIELD,
+  USR_INVALID_FIELD,
+  USR_INVALID_SHIPPING_ID,
+  USR_INVALID_EMAIL,
+  USR_INVALID_EMAIL_PASSWORD,
+  USR_INVALID_PHONE,
+  USR_INVALID_CARD,
+  PAG_ORDER_NOT_MATCHED,
+  PRO_NOT_FOUND,
+  DEP_NOT_FOUND,
+  DEP_INVALID_ID,
+  CAT_NOT_FOUND,
+  ATT_NOT_FOUND,
+  ORD_NOT_FOUND,
+  TAX_NOT_FOUND
+} from '../misc/errorCodes';
+import db from '../database/config';
+import queries from '../database/queries';
 import responses from '../misc/responses';
 
 export default {
@@ -57,7 +75,7 @@ export default {
     return next();
   },
 
-  validateAddress: () => (req, res, next) => {
+  validateAddress: (req, res, next) => {
     const {
       address_1,
       address_2,
@@ -108,7 +126,7 @@ export default {
     }
     return next();
   },
-  validateOrder: () => (req, res, next) => {
+  validateOrder: (req, res, next) => {
     const {
       cart_id,
       shipping_id,
@@ -134,7 +152,7 @@ export default {
     }
     return next();
   },
-  validatePathId: () => async (req, res, next) => {
+  validatePathId: async (req, res, next) => {
     const { id } = req.params;
     const invalidNumber = /\D/g.test(id);
 
@@ -144,7 +162,7 @@ export default {
 
     return next();
   },
-  validatePaginationQuery: () => async (req, res, next) => {
+  validatePaginationQuery: async (req, res, next) => {
     const { order, page, limit, description_length, all_words } = req.query;
     const loweredOrder = order ? order.toLowerCase() : '';
 
@@ -171,7 +189,7 @@ export default {
     req.query.order = loweredOrder;
     return next();
   },
-  validateSearchQuery: () => async (req, res, next) => {
+  validateSearchQuery: async (req, res, next) => {
     const { query_string } = req.query;
     if (!query_string) {
       return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Query string is required', 'query_string'));
@@ -179,7 +197,7 @@ export default {
 
     return next();
   },
-  validateReview: () => async (req, res, next) => {
+  validateReview: async (req, res, next) => {
     const { review, rating } = req.body;
     if (!review) {
       return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Review is required', 'review'));
@@ -197,6 +215,88 @@ export default {
       return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid rating', 'rating'));
     }
 
+    return next();
+  },
+  validateProductId: async (req, res, next) => {
+    const { id } = req.params;
+    const getProductResponse = await db.query(queries.getProductByIdProcedure, id);
+    const requestedProduct = getProductResponse[0][0];
+
+    if (!requestedProduct) {
+      return res.status(404).send(responses.invalidField(PRO_NOT_FOUND, 'Product with Id does not exist', 'id'));
+    }
+    req.requestedProduct = requestedProduct;
+    return next();
+  },
+  validateDepartmentId: async (req, res, next) => {
+    const { id } = req.params;
+    const invalidNumber = /\D/g.test(id);
+
+    if (invalidNumber) {
+      return res.status(400).send(responses.invalidField(DEP_INVALID_ID, 'Invalid department id', 'id'));
+    }
+    const getDepartmentResponse = await db.query(queries.getDepartmentProcedure, id);
+    const requestedDepartment = getDepartmentResponse[0][0];
+
+    if (!requestedDepartment) {
+      return res.status(404).send(responses.invalidField(DEP_NOT_FOUND, 'Department with Id does not exist', 'id'));
+    }
+    req.requestedDepartment = requestedDepartment;
+    return next();
+  },
+  validateCategoryId: async (req, res, next) => {
+    const { id } = req.params;
+    const getCategoryResponse = await db.query(queries.getById('category', 'category_id'), id);
+    const requestedCategory = getCategoryResponse[0];
+
+    if (!requestedCategory) {
+      return res.status(404).send(responses.invalidField(CAT_NOT_FOUND, 'Category with id does not exist', 'id'));
+    }
+    req.requestedCategory = requestedCategory;
+    return next();
+  },
+  validateAttributeId: async (req, res, next) => {
+    const { id } = req.params;
+    const getAttributeResponse = await db.query(queries.getById('attribute', 'attribute_id'), id);
+    const requestedAttribute = getAttributeResponse[0];
+
+    if (!requestedAttribute) {
+      return res.status(404).send(responses.invalidField(ATT_NOT_FOUND, 'Attribute with Id does not exist', 'attribute_id'));
+    }
+    req.requestedAttribute = requestedAttribute;
+    return next();
+  },
+  validateOrderId: async (req, res, next) => {
+    const { id } = req.params;
+    const getOrderResponse = await db.query(queries.getBriefOrderDetailsProcedure, id);
+    const requestedOrder = getOrderResponse[0][0];
+
+    if (!requestedOrder) {
+      return res.status(404).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
+    }
+    req.requestedOrder = requestedOrder;
+    return next();
+  },
+  validateTaxId: async (req, res, next) => {
+    const { id } = req.params;
+    const getTaxResponse = await db.query(queries.getById('tax', 'tax_id'), id);
+    const requestedTax = getTaxResponse[0];
+
+    if (!requestedTax) {
+      return res.status(404).send(responses.invalidField(TAX_NOT_FOUND, 'Tax with Id does not exist', 'id'));
+    }
+    req.requestedTax = requestedTax;
+    return next();
+  },
+  validateShippingRegionId: async (req, res, next) => {
+    const { id } = req.params;
+    const getRegionResponse = await db.query(queries.getShippingRegionByIdProcedure, id);
+    const requestedRegion = getRegionResponse[0];
+
+    if (!requestedRegion.length && id !== '1') {
+      return res.status(404).send(responses.invalidField(USR_INVALID_SHIPPING_ID, 'Shipping Region with Id does not exist', 'id'));
+    }
+    req.requestedShippingRegion = requestedRegion;
     return next();
   },
 };

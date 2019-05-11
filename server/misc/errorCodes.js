@@ -33,3 +33,6 @@ export const CAT_NOT_FOUND = 'CAT_01';
 // Department Errors
 export const DEP_INVALID_ID = 'DEP_01';
 export const DEP_NOT_FOUND = 'DEP_02';
+
+// Tax Errors
+export const TAX_NOT_FOUND = 'TAX_01';

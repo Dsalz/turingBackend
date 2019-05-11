@@ -1,8 +1,6 @@
 /* eslint-disable camelcase */
-import { ORD_NOT_FOUND } from '../misc/errorCodes';
 import db from '../database/config';
 import queries from '../database/queries';
-import responses from '../misc/responses';
 
 export default {
   createOrder: async (req, res) => {
@@ -22,30 +20,18 @@ export default {
   },
   getOrder: async (req, res) => {
     const { id } = req.params;
-
     try {
       const getOrderDetailsResponse = await db.query(queries.getOrderDetailsProcedure, id);
       const requestedOrderDetails = getOrderDetailsResponse[0][0];
-
-      if (!requestedOrderDetails) {
-        return res.status(404).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
-      }
       return res.status(200).send(requestedOrderDetails);
     } catch (err) {
       return res.status(500).send({ message: err });
     }
   },
   getBriefOrder: async (req, res) => {
-    const { id } = req.params;
+    const { requestedOrder } = req;
 
     try {
-      const getOrderResponse = await db.query(queries.getBriefOrderDetailsProcedure, id);
-      const requestedOrder = getOrderResponse[0][0];
-
-      if (!requestedOrder) {
-        return res.status(404).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
-      }
-
       return res.status(200).send(requestedOrder);
     } catch (err) {
       return res.status(500).send({ message: err });

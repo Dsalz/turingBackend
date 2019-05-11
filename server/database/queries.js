@@ -48,4 +48,8 @@ export default {
   createProductReviewProcedure: 'CALL catalog_create_product_review(?,?,?,?)',
   getAllProductsProcedure: "SELECT product_id, name, IF(LENGTH(description) <= ?,description,CONCAT(LEFT(description, ?),'...')) AS description,price, discounted_price, thumbnail FROM product ORDER BY display DESC",
   countAllProductsProcedure: 'CALL catalog_count_products_on_catalog()',
+
+  // Shipping Region Procedures
+  getAllShippingRegionsProcedure: 'CALL customer_get_shipping_regions()',
+  getShippingRegionByIdProcedure: 'CALL orders_get_shipping_info(?)'
 };

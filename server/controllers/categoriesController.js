@@ -1,21 +1,12 @@
 /* eslint-disable camelcase */
-import { CAT_NOT_FOUND, PRO_NOT_FOUND } from '../misc/errorCodes';
 import db from '../database/config';
 import queries from '../database/queries';
-import responses from '../misc/responses';
 import helperUtils from '../misc/helperUtils';
 
 export default {
   getCategoryById: async (req, res) => {
-    const { id } = req.params;
-
+    const { requestedCategory } = req;
     try {
-      const getCategoryResponse = await db.query(queries.getById('category', 'category_id'), id);
-      const requestedCategory = getCategoryResponse[0];
-
-      if (!requestedCategory) {
-        return res.status(404).send(responses.invalidField(CAT_NOT_FOUND, 'Category with id does not exist', 'id'));
-      }
       return res.status(200).send(requestedCategory);
     } catch (err) {
       return res.status(500).send({ message: err });
@@ -27,9 +18,6 @@ export default {
     try {
       const getCategoryResponse = await db.query(queries.getProductCategoriesProcedure, id);
       const requestedCategory = getCategoryResponse[0][0];
-      if (!requestedCategory) {
-        return res.status(404).send(responses.invalidField(PRO_NOT_FOUND, 'Product with id does not exist', 'id'));
-      }
       return res.status(200).send([requestedCategory]);
     } catch (err) {
       return res.status(500).send({ message: err });
