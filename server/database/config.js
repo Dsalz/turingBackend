@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
+// Local DB connection configuration
 const localConnection = {
   host: '192.168.64.2',
   user: 'damola',
@@ -12,6 +12,7 @@ const localConnection = {
   database: 'turing_backend'
 };
 
+// Online DB connection configuration
 const onlineConnection = {
   host: process.env.DATABASE_HOST,
   user: process.env.DATABASE_USER,

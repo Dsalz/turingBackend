@@ -34,7 +34,7 @@ export default {
     const { id } = req.params;
     try {
       const getOrderDetailsResponse = await db.query(queries.getOrderDetailsProcedure, id);
-      const requestedOrderDetails = getOrderDetailsResponse[0][0];
+      const requestedOrderDetails = getOrderDetailsResponse[0];
       return res.status(200).send(requestedOrderDetails);
     } catch (err) {
       return res.status(500).send({ message: err });

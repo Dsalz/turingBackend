@@ -36,3 +36,7 @@ export const DEP_NOT_FOUND = 'DEP_02';
 
 // Tax Errors
 export const TAX_NOT_FOUND = 'TAX_01';
+
+// Shopping Cart Errors
+export const CAR_NOT_FOUND = 'CAR_01';
+export const ITM_NOT_FOUND = 'CAR_02';

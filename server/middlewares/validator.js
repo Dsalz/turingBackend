@@ -14,7 +14,9 @@ import {
   CAT_NOT_FOUND,
   ATT_NOT_FOUND,
   ORD_NOT_FOUND,
-  TAX_NOT_FOUND
+  TAX_NOT_FOUND,
+  CAR_NOT_FOUND,
+  ITM_NOT_FOUND
 } from '../misc/errorCodes';
 import db from '../database/config';
 import queries from '../database/queries';
@@ -423,6 +425,46 @@ export default {
     req.requestedTax = requestedTax;
     return next();
   },
+  /**
+   * @description middleware method for validating cart id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateCartId: async (req, res, next) => {
+    const { id } = req.params;
+    const getCartResponse = await db.query(queries.getById('shopping_cart', 'cart_id'), id);
+    const requestedCart = getCartResponse[0];
+
+    if (!requestedCart) {
+      return res.status(404).send(responses.invalidField(CAR_NOT_FOUND, 'Cart with Id does not exist', 'id'));
+    }
+    req.requestedCart = requestedCart;
+    return next();
+  },
+  /**
+   * @description middleware method for validating item id passed in route
+   * and verifying that it exists in the database
+   *
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateItemId: async (req, res, next) => {
+    const { id } = req.params;
+    const getItemResponse = await db.query(queries.getById('shopping_cart', 'item_id'), id);
+    const requestedItem = getItemResponse[0];
+
+    if (!requestedItem) {
+      return res.status(404).send(responses.invalidField(ITM_NOT_FOUND, 'Item with Id does not exist', 'id'));
+    }
+    req.requestedItem = requestedItem;
+    return next();
+  },
 
   /**
    * @description middleware method for validating shipping region id passed in route
@@ -490,6 +532,67 @@ export default {
     const requestedOrder = getOrderResponse[0][0];
     if (!requestedOrder) {
       return res.status(404).send(responses.invalidField(ORD_NOT_FOUND, 'Order with Id does not exist', 'id'));
+    }
+    return next();
+  },
+  /**
+   * @description middleware method for validating fields passed in body when adding product to cart
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateAddProductToCart: async (req, res, next) => {
+    const { cart_id, product_id, attributes } = req.body;
+
+    if (!cart_id) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Cart id is required', 'cart_id'));
+    }
+
+    if (typeof cart_id !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid cart id', 'cart_id'));
+    }
+    if (!product_id) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Product id is required', 'product_id'));
+    }
+
+    if (typeof product_id !== 'number') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid product id', 'product_id'));
+    }
+    if (!attributes) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Attributes are required', 'attributes'));
+    }
+
+    if (typeof attributes !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid attributes', 'attributes'));
+    }
+
+    const getCartResponse = await db.query(queries.getById('shopping_cart', 'cart_id'), cart_id);
+    const requestedCart = getCartResponse[0];
+
+    if (!requestedCart) {
+      return res.status(404).send(responses.invalidField(CAR_NOT_FOUND, 'Cart with Id does not exist', 'cart_id'));
+    }
+
+    const getProductResponse = await db.query(queries.getProductByIdProcedure, product_id);
+    const requestedProduct = getProductResponse[0][0];
+
+    if (!requestedProduct) {
+      return res.status(404).send(responses.invalidField(PRO_NOT_FOUND, 'Product with Id does not exist', 'product_id'));
+    }
+    return next();
+  },
+  /**
+   * @description middleware method for validating quanity field passed in body when updating cart
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateUpdateCartItem: async (req, res, next) => {
+    const { quantity } = req.body;
+    if (typeof quantity !== 'number') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid quantity', 'quantity'));
     }
     return next();
   },

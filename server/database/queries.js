@@ -1,14 +1,8 @@
 export default {
   createNew: table => `INSERT INTO ${table} set ?`,
   getById: (table, id) => `Select * from ${table} where ${id} = ?`,
-  getByEmail: table => `Select * from ${table} where email = ?`,
   getAll: table => `Select * from ${table}`,
   getAllAndSort: (table, sortBy, order) => `Select * from ${table} ORDER BY ${sortBy} ${order}`,
-  getAllByValue: (table, value) => `Select * from ${table} where ${value} = ?`,
-  updateById: table => `UPDATE ${table} SET ? WHERE id = ? `,
-  updateByEmail: table => `UPDATE ${table} SET ? WHERE email = ? `,
-  deleteById: table => `DELETE FROM ${table} where id = ?`,
-
   // Product Procedures
   getProductAttributesProcedure: 'CALL catalog_get_product_attributes(?)',
 
@@ -52,5 +46,16 @@ export default {
 
   // Shipping Region Procedures
   getAllShippingRegionsProcedure: 'CALL customer_get_shipping_regions()',
-  getShippingRegionByIdProcedure: 'CALL orders_get_shipping_info(?)'
+  getShippingRegionByIdProcedure: 'CALL orders_get_shipping_info(?)',
+
+  // Shopping Cart Procedures
+  addProductToShoppingCartProcedure: 'CALL shopping_cart_add_product(?,?,?)',
+  getProductFromShoppingCartProcedure: 'CALL shopping_cart_get_products(?)',
+  getSavedProductFromShoppingCartProcedure: 'CALL shopping_cart_get_saved_products(?)',
+  updateShoppingCartProcedure: 'CALL shopping_cart_update(?,?)',
+  removeProductFromShoppingCartProcedure: 'CALL shopping_cart_remove_product(?)',
+  getTotalAmountFromShoppingCartProcedure: 'CALL shopping_cart_get_total_amount(?)',
+  saveForLaterShoppingCartProcedure: 'CALL shopping_cart_save_product_for_later(?)',
+  emptyShoppingCartProcedure: 'CALL shopping_cart_empty(?)',
+  moveToCartProcedure: 'CALL shopping_cart_move_product_to_cart(?)',
 };

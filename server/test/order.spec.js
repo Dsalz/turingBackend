@@ -207,7 +207,7 @@ describe('Creating an order', () => {
 });
 
 describe('Getting short order details', () => {
-  let orderId;
+  let realOrderId;
   before((done) => {
     const newOrder = {
       cart_id: '2',
@@ -224,25 +224,25 @@ describe('Getting short order details', () => {
         const { status, body } = res;
         expect(status).to.equal(200);
         // eslint-disable-next-line prefer-destructuring
-        orderId = body.orderId;
+        realOrderId = body.orderId;
         done();
       });
   });
   it('should succeed if id is valid', (done) => {
     chai.request(app)
-      .get(`${currApiPrefix}/orders/shortDetail/${orderId}`)
+      .get(`${currApiPrefix}/orders/shortDetail/${realOrderId}`)
       .set('USER-KEY', `${userToken}`)
       .end((err, res) => {
         should.not.exist(err);
         const { status, body } = res;
         expect(status).to.equal(200);
-        expect(body.order_id).to.equal(orderId);
+        expect(body.order_id).to.equal(realOrderId);
         done();
       });
   });
   it('should fail if api key is invalid', (done) => {
     chai.request(app)
-      .get(`${currApiPrefix}/orders/shortDetail/${orderId}`)
+      .get(`${currApiPrefix}/orders/shortDetail/${realOrderId}`)
       .set('USER-KEY', `${wrongToken}`)
       .end((err, res) => {
         const { status, body } = res;
@@ -254,7 +254,7 @@ describe('Getting short order details', () => {
   });
   it('should fail if api key is not provided', (done) => {
     chai.request(app)
-      .get(`${currApiPrefix}/orders/shortDetail/${orderId}`)
+      .get(`${currApiPrefix}/orders/shortDetail/${realOrderId}`)
       .end((err, res) => {
         const { status, body } = res;
         expect(status).to.equal(401);
@@ -277,24 +277,40 @@ describe('Getting short order details', () => {
 });
 
 describe('Getting full order details', () => {
-  let orderId;
+  let realOrderId;
   before((done) => {
-    const newOrder = {
-      cart_id: '2',
-      shipping_id: 21,
-      tax_id: 222,
-      comments: 'bring it fast',
-    };
     chai.request(app)
-      .post(`${currApiPrefix}/orders`)
-      .set('USER-KEY', `${userToken}`)
-      .send(newOrder)
+      .get(`${currApiPrefix}/shoppingcart/generateUniqueId`)
       .end((err, res) => {
         should.not.exist(err);
         const { status, body } = res;
         expect(status).to.equal(200);
-        // eslint-disable-next-line prefer-destructuring
-        orderId = body.orderId;
+        const newOrder = {
+          cart_id: body.cart_id,
+          shipping_id: 21,
+          tax_id: 222,
+          comments: 'bring it fast',
+        };
+        chai.request(app)
+          .post(`${currApiPrefix}/orders`)
+          .set('USER-KEY', `${userToken}`)
+          .send(newOrder)
+          .end((err, res) => {
+            should.not.exist(err);
+            realOrderId = res.body.orderId;
+            done();
+          });
+      });
+  });
+  it('should succeed if id is valid', (done) => {
+    chai.request(app)
+      .get(`${currApiPrefix}/orders/${realOrderId}`)
+      .set('USER-KEY', `${userToken}`)
+      .end((err, res) => {
+        should.not.exist(err);
+        const { status, body } = res;
+        expect(status).to.equal(200);
+        expect(body).to.be.an('array');
         done();
       });
   });
@@ -311,7 +327,7 @@ describe('Getting full order details', () => {
   });
   it('should fail if api key is invalid', (done) => {
     chai.request(app)
-      .get(`${currApiPrefix}/orders/${orderId}`)
+      .get(`${currApiPrefix}/orders/${realOrderId}`)
       .set('USER-KEY', `${wrongToken}`)
       .end((err, res) => {
         const { status, body } = res;
@@ -323,7 +339,7 @@ describe('Getting full order details', () => {
   });
   it('should fail if api key is not provided', (done) => {
     chai.request(app)
-      .get(`${currApiPrefix}/orders/${orderId}`)
+      .get(`${currApiPrefix}/orders/${realOrderId}`)
       .end((err, res) => {
         const { status, body } = res;
         expect(status).to.equal(401);

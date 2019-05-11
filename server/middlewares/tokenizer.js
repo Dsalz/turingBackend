@@ -5,9 +5,11 @@ import responses from '../misc/responses';
 
 dotenv.config();
 
+// Secret key to be used for generating api keys
 const majorKey = process.env.SECRET_KEY;
 
 const tokenizer = {
+// Method for generating keys that expire in 24 hrs
   createToken: user => new Promise((resolve, reject) => {
     jwt.sign({ user }, majorKey, { expiresIn: '24h' }, (err, token) => {
       if (err) {
@@ -16,6 +18,7 @@ const tokenizer = {
       resolve(token);
     });
   }),
+  // Method for verifying api key passed in header
   verifyToken: (req, res, next) => {
     const authorization = req.headers['user-key'];
     if (!authorization) {
