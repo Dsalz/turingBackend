@@ -60,7 +60,7 @@ describe('Getting department by id', () => {
       .get(`${currApiPrefix}/departments/10000000`)
       .end((err, res) => {
         should.not.exist(err);
-        expect(res.status).to.equal(400);
+        expect(res.status).to.equal(404);
         expect(res.body.error.code).to.equal(DEP_NOT_FOUND);
         expect(res.body.error.message).to.equal('Department with Id does not exist');
         done();

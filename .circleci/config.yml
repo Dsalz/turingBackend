@@ -4,7 +4,7 @@ jobs:
   docker:
    - image: circleci/node:latest
    - image: circleci/mysql:latest
-        environment:
+        environment: 
           MYSQL_DATABASE: cXBmCDuY1h
           MYSQL_USER: cXBmCDuY1h
           MYSQL_PASSWORD: aupZ5y6BnH

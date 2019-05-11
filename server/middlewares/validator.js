@@ -145,7 +145,7 @@ export default {
     return next();
   },
   validatePaginationQuery: () => async (req, res, next) => {
-    const { order, page, limit } = req.query;
+    const { order, page, limit, description_length, all_words } = req.query;
     const loweredOrder = order ? order.toLowerCase() : '';
 
     if (order && loweredOrder !== 'asc' && loweredOrder !== 'desc') {
@@ -160,7 +160,43 @@ export default {
       return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid page', 'page'));
     }
 
+    if (description_length && /\D/g.test(description_length)) {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid description length', 'description_length'));
+    }
+
+    if (all_words && all_words !== 'on' && all_words !== 'off') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid all words query parameter', 'all_words'));
+    }
+
     req.query.order = loweredOrder;
     return next();
-  }
+  },
+  validateSearchQuery: () => async (req, res, next) => {
+    const { query_string } = req.query;
+    if (!query_string) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Query string is required', 'query_string'));
+    }
+
+    return next();
+  },
+  validateReview: () => async (req, res, next) => {
+    const { review, rating } = req.body;
+    if (!review) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Review is required', 'review'));
+    }
+
+    if (typeof review !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid review', 'review'));
+    }
+
+    if (!rating) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Rating is required', 'rating'));
+    }
+
+    if (typeof rating !== 'number') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid rating', 'rating'));
+    }
+
+    return next();
+  },
 };

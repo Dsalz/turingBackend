@@ -38,7 +38,7 @@ export default {
       const existingUserResponse = await db.query(queries.getCustomerByEmailProcedure, email);
       const existingUser = existingUserResponse[0][0];
       if (!existingUser) {
-        return res.status(400).send(responses.invalidField(USR_EMAIL_NOT_FOUND, 'User with email does not exist', 'email'));
+        return res.status(404).send(responses.invalidField(USR_EMAIL_NOT_FOUND, 'User with email does not exist', 'email'));
       }
       const validPassword = password === existingUser.password;
       if (!validPassword) {

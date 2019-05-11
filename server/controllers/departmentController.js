@@ -17,7 +17,7 @@ export default {
       const requestedDepartment = getDepartmentResponse[0][0];
 
       if (!requestedDepartment) {
-        return res.status(400).send(responses.invalidField(DEP_NOT_FOUND, 'Department with Id does not exist', 'id'));
+        return res.status(404).send(responses.invalidField(DEP_NOT_FOUND, 'Department with Id does not exist', 'id'));
       }
       return res.status(200).send({ department_id: Number(id), ...requestedDepartment });
     } catch (err) {

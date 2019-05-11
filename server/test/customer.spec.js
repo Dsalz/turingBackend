@@ -221,7 +221,7 @@ describe('Logging customers in', () => {
       .post(`${currApiPrefix}/customers/login`)
       .send(newUser)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
+        expect(res.status).to.equal(404);
         expect(res.body.error.message).to.equal('User with email does not exist');
         expect(res.body.error.code).to.equal(USR_EMAIL_NOT_FOUND);
         done();
