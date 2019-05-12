@@ -2,6 +2,7 @@ import '@babel/polyfill';
 import express from 'express';
 import logger from 'morgan';
 import cors from 'cors';
+import expressSession from 'express-session';
 import dotenv from 'dotenv';
 import routes from './routes';
 import Trimmer from './middlewares/Trimmer';
@@ -20,6 +21,13 @@ app.use(logger('dev'));
 // Parse incoming requests data
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Creating user session
+app.use(expressSession({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true
+}));
 
 // Trimming data
 app.use(Trimmer.trimBody);

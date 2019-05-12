@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import uuid from 'uuid';
 import { USR_INVALID_EMAIL_PASSWORD, USR_EMAIL_ALREADY_EXISTS, USR_EMAIL_NOT_FOUND } from '../misc/errorCodes';
 import responses from '../misc/responses';
 import db from '../database/config';
@@ -64,6 +65,46 @@ export default {
       delete userDetails.password;
       const token = await tokenizer.createToken({ id: customer_id, email });
       return res.status(200).send({ message: 'User successfully logged in', customer: { schema: userDetails }, accessToken: `Bearer ${token}`, expires_in: '24h' });
+    } catch (err) {
+      return res.status(500).send({ message: err });
+    }
+  },
+  /**
+   * @description method for logging users in from facebook
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} customer data
+   */
+  facebookLogin: async (req, res) => {
+    const {
+      emails,
+      displayName } = req.user;
+    const email = emails[0];
+    try {
+      const existingUserResponse = await db.query(queries.getCustomerByEmailProcedure, email);
+      const existingUser = existingUserResponse[0][0];
+
+      // Logging them straight in if they already have an account on the platform
+      if (existingUser) {
+        const { customer_id } = existingUser;
+        const getCustomerResponse = await db.query(queries.getCustomerByIdProcedure,
+          customer_id);
+        const userDetails = getCustomerResponse[0][0];
+        delete userDetails.password;
+        const token = await tokenizer.createToken({ id: customer_id, email });
+        return res.status(200).send({ customer: { schema: userDetails }, accessToken: `Bearer ${token}`, expires_in: '24h' });
+      }
+
+      // Creating a new account for them if they don't exist on the platform
+      const createUserResponse = await db.query(queries.createCustomerProcedure,
+        [displayName, email, uuid()]);
+      const getCustomerResponse = await db.query(queries.getCustomerByIdProcedure,
+        createUserResponse[0][0]['LAST_INSERT_ID()']);
+      const createdCustomer = getCustomerResponse[0][0];
+      delete createdCustomer.password;
+      const { customer_id } = createdCustomer;
+      const token = await tokenizer.createToken({ id: customer_id, email });
+      return res.status(200).send({ customer: { schema: createdCustomer }, accessToken: `Bearer ${token}`, expires_in: '24h' });
     } catch (err) {
       return res.status(500).send({ message: err });
     }

@@ -596,4 +596,22 @@ export default {
     }
     return next();
   },
+  /**
+   * @description middleware method for validating access token field passed in body when
+   * logging in with facebook
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {object} next - Function for passing to the next middleware
+   * @returns {undefined}
+   */
+  validateAccessToken: async (req, res, next) => {
+    const { access_token } = req.body;
+    if (!access_token) {
+      return res.status(400).send(responses.invalidField(USR_REQUIRED_FIELD, 'Access token is required', 'access_token'));
+    }
+    if (typeof access_token !== 'string') {
+      return res.status(400).send(responses.invalidField(USR_INVALID_FIELD, 'Invalid access token', 'access_token'));
+    }
+    return next();
+  },
 };

@@ -6,6 +6,7 @@ import customerController from '../controllers/customerController';
 // Middlewares
 import validator from '../middlewares/validator';
 import tokenizer from '../middlewares/tokenizer';
+import passport from '../middlewares/passportConfig';
 
 const customerRouter = express.Router();
 
@@ -47,6 +48,12 @@ customerRouter.put('/customers/creditCard',
   tokenizer.verifyToken,
   validator.validateCreditCard,
   customerController.updateCustomerCreditCard);
+
+// Route for signing user's in from facebook
+customerRouter.post('/customers/facebook',
+  validator.validateAccessToken,
+  passport.authenticate('facebook-token'),
+  customerController.facebookLogin);
 
 
 export default customerRouter;

@@ -17,6 +17,7 @@ import {
   USR_INVALID_FIELD,
   USR_INVALID_SHIPPING_ID
 } from '../misc/errorCodes';
+import customerController from '../controllers/customerController';
 
 chai.use(chaihttp);
 
@@ -1086,5 +1087,91 @@ describe('Updating customers credit card', () => {
         expect(body.error.code).to.equal(USR_INVALID_CARD);
         done();
       });
+  });
+});
+
+describe('Customer login with facebook', () => {
+  it('should fail if access token is not provided', (done) => {
+    const requestBody = {};
+    chai.request(app)
+      .post(`${currApiPrefix}/customers/facebook`)
+      .send(requestBody)
+      .end((err, res) => {
+        const { status, body } = res;
+        const { code, message } = body.error;
+        expect(status).to.equal(400);
+        expect(code).to.equal(USR_REQUIRED_FIELD);
+        expect(message).to.equal('Access token is required');
+        done();
+      });
+  });
+  it('should fail if access token is invalid', (done) => {
+    const requestBody = {
+      access_token: true
+    };
+    chai.request(app)
+      .post(`${currApiPrefix}/customers/facebook`)
+      .send(requestBody)
+      .end((err, res) => {
+        const { status, body } = res;
+        const { code, message } = body.error;
+        expect(status).to.equal(400);
+        expect(code).to.equal(USR_INVALID_FIELD);
+        expect(message).to.equal('Invalid access token');
+        done();
+      });
+  });
+
+  it('should log existing user in', (done) => {
+    const response = {};
+    const mockRequest = {
+      user: {
+        emails: ['duplicationtestemail@yahoo.com'],
+        displayName: 'hdhdh'
+      }
+    };
+    const mockResponse = {
+      status: (code) => {
+        response.status = code;
+        return {
+          send: (data) => {
+            response.body = data;
+          }
+        };
+      } };
+    customerController.facebookLogin(mockRequest, mockResponse).then(() => {
+      const { status, body } = response;
+      const { email, name } = body.customer.schema;
+      expect(status).to.equal(200);
+      expect(email).to.equal(mockRequest.user.emails[0]);
+      expect(name).to.equal('Damola');
+      done();
+    });
+  });
+  it('should sign new user up', (done) => {
+    const response = {};
+    const mockRequest = {
+      user: {
+        emails: ['facebooklogintestemail@yahoo.com'],
+        displayName: 'hdhdh'
+      }
+    };
+    const mockResponse = {
+      status: (code) => {
+        response.status = code;
+        return {
+          send: (data) => {
+            response.body = data;
+          }
+        };
+      } };
+    customerController.facebookLogin(mockRequest, mockResponse).then(() => {
+      const { status, body } = response;
+      const { email, name } = body.customer.schema;
+      expect(status).to.equal(200);
+      expect(email).to.equal(mockRequest.user.emails[0]);
+      expect(name).to.equal(mockRequest.user.displayName);
+      done();
+    });
   });
 });
