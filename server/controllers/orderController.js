@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import db from '../database/config';
 import queries from '../database/queries';
+import helperUtils from '../misc/helperUtils';
 
 export default {
   /**
@@ -15,11 +16,19 @@ export default {
       shipping_id,
       tax_id
     } = req.body;
-    const { id } = req.user;
+    const { id, email } = req.user;
     try {
       const createdOrderResponse = await db.query(queries.createOrderProcedure,
         [cart_id, id, shipping_id, tax_id]);
-      return res.status(200).send(createdOrderResponse[0][0]);
+      const createdOrder = createdOrderResponse[0][0];
+      const emailData = {
+        email,
+        from: 'Spree Shopping Mall',
+        subject: 'Order Confirmation',
+        text: `Your order ${createdOrder.order_id} has been received and is being processed`
+      };
+      helperUtils.sendMail(emailData);
+      return res.status(200).send(createdOrder);
     } catch (err) {
       return res.status(500).send({ message: err });
     }
